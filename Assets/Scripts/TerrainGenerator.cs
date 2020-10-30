@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 [RequireComponent(typeof(MeshFilter))]
 public class TerrainGenerator : MonoBehaviour {
@@ -8,6 +9,8 @@ public class TerrainGenerator : MonoBehaviour {
     Mesh mesh;
     Vector3[] vertices;
     int[] triangles;
+
+    public GameObject grassPatch;
 
     public int xSize = 20;
     public int zSize = 20;
@@ -17,14 +20,14 @@ public class TerrainGenerator : MonoBehaviour {
         mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
 
-        StartCoroutine(CreateShape());
+        CreateShape();
     }
 
     void Update() {
         UpdateMesh();
     }
 
-    IEnumerator CreateShape() {
+    void CreateShape() {
         vertices = new Vector3[(xSize + 1) * (zSize + 1)];
 
         for (int i = 0, z = 0; z <= zSize; z++) {
@@ -32,6 +35,16 @@ public class TerrainGenerator : MonoBehaviour {
                 float y = Mathf.PerlinNoise(x * 0.3f, z * 0.3f) * 2f;
                 y += Mathf.PerlinNoise(x * 0.2f, z * 0.2f) * 3f;
                 vertices[i] = new Vector3(x, y, z);
+
+                // grass spawn
+                if (y < 2.5) { // avoid hills
+                    Instantiate(grassPatch, new Vector3(x, y, z), Quaternion.identity);
+                    Instantiate(grassPatch, new Vector3(Math.Abs(x - 0.2f), y, Math.Abs(z - 0.2f)), Quaternion.identity);
+                    Instantiate(grassPatch, new Vector3(Math.Abs(x + 0.2f), y, Math.Abs(z + 0.2f)), Quaternion.identity);
+                    Instantiate(grassPatch, new Vector3(Math.Abs(x - 0.2f), y, Math.Abs(z + 0.2f)), Quaternion.identity);
+                    Instantiate(grassPatch, new Vector3(Math.Abs(x + 0.2f), y, Math.Abs(z - 0.2f)), Quaternion.identity);
+                }
+
                 i++;
             }
         }
@@ -51,8 +64,6 @@ public class TerrainGenerator : MonoBehaviour {
 
                 vert++;
                 tris += 6;
-
-                yield return new WaitForSeconds(0.01f);
             }
             vert++;
         }
