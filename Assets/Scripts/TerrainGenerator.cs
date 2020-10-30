@@ -11,9 +11,11 @@ public class TerrainGenerator : MonoBehaviour {
     int[] triangles;
 
     public GameObject grassPatch;
+    public GameObject[] accessories = new GameObject[5];
 
     public int xSize = 20;
     public int zSize = 20;
+    System.Random random = new System.Random();
 
     // Start is called before the first frame update
     void Start() {
@@ -43,6 +45,11 @@ public class TerrainGenerator : MonoBehaviour {
                     Instantiate(grassPatch, new Vector3(Math.Abs(x + 0.2f), y, Math.Abs(z + 0.2f)), Quaternion.identity);
                     Instantiate(grassPatch, new Vector3(Math.Abs(x - 0.2f), y, Math.Abs(z + 0.2f)), Quaternion.identity);
                     Instantiate(grassPatch, new Vector3(Math.Abs(x + 0.2f), y, Math.Abs(z - 0.2f)), Quaternion.identity);
+                }
+                // random terrain accessory spawn
+                if (random.Next(0, 10) < 1) {
+                    int num = random.Next(0, accessories.Length);
+                    Instantiate(accessories[num], new Vector3(x, y, z), Quaternion.Euler(new Vector3(0, random.Next(0, 359), 0)));
                 }
 
                 i++;

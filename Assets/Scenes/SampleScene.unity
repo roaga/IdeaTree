@@ -564,6 +564,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   grassPatch: {fileID: 3823904935312573531, guid: 94041ccdef74f7d408ff9d1382f49eae,
     type: 3}
+  accessories:
+  - {fileID: 5744835204202968455, guid: 904c994af20bbf64493c06b741e63cb4, type: 3}
+  - {fileID: 1799145172504711529, guid: 18af26af61ee8234caa44dc89f89d5cf, type: 3}
+  - {fileID: 5157409133979067158, guid: 4b21e533c871dba4bb5c56ba22947be8, type: 3}
+  - {fileID: 4867889463058203156, guid: f550c80a288252347bddcb7465dc52df, type: 3}
+  - {fileID: 4703040221364307242, guid: 30cd4b8a989daaa4fbb273ee70bf99f6, type: 3}
   xSize: 20
   zSize: 20
 --- !u!64 &978325290
