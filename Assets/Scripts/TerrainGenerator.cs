@@ -23,10 +23,20 @@ public class TerrainGenerator : MonoBehaviour {
         GetComponent<MeshFilter>().mesh = mesh;
 
         CreateShape();
+        UpdateMesh();
+    }
+    void Update() {
+
     }
 
-    void Update() {
-        UpdateMesh();
+    void OnMouseDown() {
+        Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, 100f) && hit.collider.gameObject.name == transform.root.gameObject.name) {
+            //TODO: Checks to make sure spawn location is far enough from other trees
+            TreeGenerator.SpawnTree();
+        }    
     }
 
     void CreateShape() {
@@ -83,6 +93,9 @@ public class TerrainGenerator : MonoBehaviour {
         mesh.triangles = triangles;
 
         mesh.RecalculateNormals();
+
+        GetComponent<MeshCollider>().sharedMesh = null;
+        GetComponent<MeshCollider>().sharedMesh = mesh;
     }
     
 }
