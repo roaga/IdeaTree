@@ -14,7 +14,7 @@ public class TreeGenerator : MonoBehaviour {
     int thicknessFactor = 1;
     List<Branch> branches;
 
-    public static void SpawnTree(Vector3 basePos) {
+    public void SpawnTree(Vector3 basePos) {
         basePosition = basePos;
 
         Branch rootBranch = new Branch("", null, null, true);

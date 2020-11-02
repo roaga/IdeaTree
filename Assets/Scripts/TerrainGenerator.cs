@@ -37,7 +37,7 @@ public class TerrainGenerator : MonoBehaviour {
         if (Physics.Raycast(ray, out hit, 100f) && hit.collider.gameObject.name == transform.root.gameObject.name) {
             //TODO: Checks to make sure spawn location is far enough from other trees
             GameObject tree = Instantiate(tree, hit.point, Quaternion.identity);
-            tree.SendMessage("SpawnTree", hit.point);
+            tree.GetComponent<TreeGenerator>().SpawnTree(hit.point);
         }    
     }
 
