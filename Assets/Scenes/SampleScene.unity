@@ -570,6 +570,8 @@ MonoBehaviour:
   - {fileID: 5157409133979067158, guid: 4b21e533c871dba4bb5c56ba22947be8, type: 3}
   - {fileID: 4867889463058203156, guid: f550c80a288252347bddcb7465dc52df, type: 3}
   - {fileID: 4703040221364307242, guid: 30cd4b8a989daaa4fbb273ee70bf99f6, type: 3}
+  treePrefab: {fileID: 6672194432935736345, guid: df13f18cf7c4a4c9dab215a597a84ae2,
+    type: 3}
   xSize: 20
   zSize: 20
 --- !u!64 &978325290

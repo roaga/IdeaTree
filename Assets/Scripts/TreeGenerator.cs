@@ -1,4 +1,6 @@
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
 public class TreeGenerator : MonoBehaviour {
 
@@ -18,6 +20,7 @@ public class TreeGenerator : MonoBehaviour {
         basePosition = basePos;
 
         Branch rootBranch = new Branch("", null, null, true);
+        branches = new List<Branch>();
         branches.Add(rootBranch);
 
         Debug.Log("TODO: generate hexagonal and tapering tree mesh with correct but random rotation");

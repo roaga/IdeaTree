@@ -1,6 +1,8 @@
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
-public class Branch : MonoBehaviour {
+public class Branch {
     string text;
     Branch parent;
     List<Branch> children;
@@ -33,7 +35,7 @@ public class Branch : MonoBehaviour {
         return children;
     }
 
-    public bool isLeaf() {
+    public bool getIsLeaf() {
         return isLeaf;
     }
 }
