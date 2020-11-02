@@ -12,6 +12,7 @@ public class TerrainGenerator : MonoBehaviour {
 
     public GameObject grassPatch;
     public GameObject[] accessories = new GameObject[5];
+    public GameObject tree;
 
     public int xSize = 20;
     public int zSize = 20;
@@ -35,7 +36,8 @@ public class TerrainGenerator : MonoBehaviour {
 
         if (Physics.Raycast(ray, out hit, 100f) && hit.collider.gameObject.name == transform.root.gameObject.name) {
             //TODO: Checks to make sure spawn location is far enough from other trees
-            TreeGenerator.SpawnTree();
+            GameObject tree = Instantiate(tree, hit.point, Quaternion.identity);
+            tree.SendMessage("SpawnTree", hit.point);
         }    
     }
 
