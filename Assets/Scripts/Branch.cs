@@ -6,36 +6,36 @@ public class Branch {
     string text;
     Branch parent;
     List<Branch> children;
-    bool isLeaf;
+    int levelNum;
 
-    public Branch(string text, Branch parent, List<Branch> children, bool isLeaf) {
+    public Branch(string text, Branch parent, List<Branch> children, int levelNum) {
         this.text = text;
         this.parent = parent;
         this.children = children;
-        this.isLeaf = isLeaf;
+        this.levelNum = levelNum;
     }
 
-    public void addChild(Branch child) {
+    public void AddChild(Branch child) {
         children.Add(child);
     }
 
-    public void setText(string text) {
+    public void SetText(string text) {
         this.text = text;
     }
 
-    public string getText() {
+    public string GetText() {
         return text;
     }
 
-    public Branch getParent() {
+    public Branch GetParent() {
         return parent;
     }
 
-    public List<Branch> getChildren() {
+    public List<Branch> GetChildren() {
         return children;
     }
 
-    public bool getIsLeaf() {
-        return isLeaf;
+    public int GetLevelNum() {
+        return levelNum;
     }
 }
