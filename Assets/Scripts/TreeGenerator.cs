@@ -9,7 +9,7 @@ public class TreeGenerator : MonoBehaviour {
 
     Mesh mesh;
     List<Vector3> vertices;
-    int[] triangles;
+    List<int> triangles;
     const int NUM_VERTICES_IN_SHAPE = 6; // other code will have to be changed too if this changes
 
     Vector3 basePosition;
@@ -28,6 +28,7 @@ public class TreeGenerator : MonoBehaviour {
 
         // calculate base vertices
         vertices = new List<Vector3>();
+        triangles = new List<int>();
         int i = 0;
         for (double angle = 0.0; angle < 360.0; angle +=  360.0 / NUM_VERTICES_IN_SHAPE) {
             vertices.Add(new Vector3(basePosition.x + thicknessFactor * Math.Cos(angle), basePosition.y, basePosition.z + thicknessFactor * Math.Sin(angle)));
@@ -65,7 +66,23 @@ public class TreeGenerator : MonoBehaviour {
             i++;
         }
 
-        // TODO: calculate triangles using previous vertices as base
+        // Calculate triangles using previous vertices as base; there should be 2 * NUM_VERTICES_IN_SHAPE = 12 triangles
+        int i = 0;
+        for (int vertex = (branches.Count - 1) * 2; vertex < NUM_VERTICES_IN_SHAPE; vertex++) {
+            triangles.Add(vertices[vertex]);
+            if ((vertex + 1) % NUM_VERTICES_IN_SHAPE == 0) {
+                triangles.Add(vertices[vertex + 1 - NUM_VERTICES_IN_SHAPE]);
+            } else {
+                triangles.Add(vertices[vertex + 1]);
+            }
+            triangles.Add(vertices[vertex + NUM_VERTICES_IN_SHAPE - 1]);
+
+            triangles.Add(vertices[vertex]);
+            triangles.Add(vertices[vertex + NUM_VERTICES_IN_SHAPE - 1]);
+            triangles.Add(vertices[vertex + NUM_VERTICES_IN_SHAPE]);
+
+            i++;
+        }
 
 
         return vertices;
@@ -89,7 +106,7 @@ public class TreeGenerator : MonoBehaviour {
     void UpdateMesh() {
         mesh.Clear();
         mesh.vertices = vertices.ToArray();
-        mesh.triangles = triangles;
+        mesh.triangles = triangles.ToArray();
 
         mesh.RecalculateNormals();
 
