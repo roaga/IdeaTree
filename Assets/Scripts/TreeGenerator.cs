@@ -8,7 +8,7 @@ public class TreeGenerator : MonoBehaviour {
     public GameObject leaves;
 
     Mesh mesh;
-    Vector3[] vertices;
+    List<Vector3> vertices;
     int[] triangles;
     const int NUM_VERTICES_IN_SHAPE = 6; // other code will have to be changed too if this changes
 
@@ -27,15 +27,16 @@ public class TreeGenerator : MonoBehaviour {
         numLevels = 1;
 
         // calculate base vertices
+        vertices = new List<Vector3>();
         int i = 0;
         for (double angle = 0.0; angle < 360.0; angle +=  360.0 / NUM_VERTICES_IN_SHAPE) {
-            vertices[i] = new Vector3(basePosition.x + thicknessFactor * Math.Cos(angle), basePosition.y, basePosition.z + thicknessFactor * Math.Sin(angle));
+            vertices.Add(new Vector3(basePosition.x + thicknessFactor * Math.Cos(angle), basePosition.y, basePosition.z + thicknessFactor * Math.Sin(angle)));
             i++;
         }
 
         float[] verticesToAdd = CalculateBranch(new Vector3(0, 0, 0), basePos, heightFactor, rootBranch.GetLevelNum());
         for (int i = 0; i < verticesToAdd.Length; i++) {
-            vertices[i + 6] = verticesToAdd[i];
+            vertices.Add(verticesToAdd[i]);
         }
 
         CreateShape();
@@ -47,20 +48,24 @@ public class TreeGenerator : MonoBehaviour {
 
     }
 
-    float[] CalculateBranchVertices(Vector3 rotation, Vector3 rootPos, float length, int levelNum) {
+    float[] CalculateBranch(Vector3 rotation, Vector3 rootPos, float length, int levelNum) {
         float[] vertices = new float[NUM_VERTICES_IN_SHAPE * 2];
 
-        // TODO: calculate center using rotation and length factor
-        Vector3 center = basePosition;
+        // calculate center of top face using rotation and length factor
+        Vector3 topCenter = new Vector3(basePosition.x, basePosition.y + heightFactor / (levelNum * 0.5), basePosition.z);
+        Vector3 dir = topCenter - rootPos;
+        dir = Quaternion.Euler(rotatation) * dir;
+        topCenter = dir + rootPos;
 
         // calculate top vertices
+        float thickness = thicknessFactor * numLevels * 0.5f / levelNum;
         int i = 0;
         for (double angle = 0.0; angle < 360.0; angle +=  360.0 / NUM_VERTICES_IN_SHAPE) {
-            
+            vertices.Add(new Vector3(topCenter.x + thickness * Math.Cos(angle), topCenter.y, topCenter.z + thickness * Math.Sin(angle)));
             i++;
         }
 
-        // calculate triangles using previous vertices as base
+        // TODO: calculate triangles using previous vertices as base
 
 
         return vertices;
@@ -83,7 +88,7 @@ public class TreeGenerator : MonoBehaviour {
     
     void UpdateMesh() {
         mesh.Clear();
-        mesh.vertices = vertices;
+        mesh.vertices = vertices.ToArray();
         mesh.triangles = triangles;
 
         mesh.RecalculateNormals();
