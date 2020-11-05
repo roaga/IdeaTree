@@ -10,12 +10,12 @@ public class TreeGenerator : MonoBehaviour {
     Mesh mesh;
     List<Vector3> vertices;
     List<int> triangles;
-    const int NUM_VERTICES_IN_SHAPE = 6; // other code will have to be changed too if this changes
+    const int NUM_VERTICES_IN_SHAPE = 6;
 
     Vector3 basePosition;
     int numLevels = 0;
-    int heightFactor = 1;
-    int thicknessFactor = 1;
+    float heightFactor = 1;
+    float thicknessFactor = 0.1f;
     List<Branch> branches;
 
     public void SpawnTree(Vector3 basePos) {
@@ -31,8 +31,9 @@ public class TreeGenerator : MonoBehaviour {
         // calculate base vertices
         vertices = new List<Vector3>();
         triangles = new List<int>();
-        for (double angle = 0.0; angle < 360.0; angle +=  360.0 / NUM_VERTICES_IN_SHAPE) {
-            vertices.Add(new Vector3(thicknessFactor * (float) Math.Cos(angle), 0, thicknessFactor * (float) Math.Sin(angle)));
+        for (double angle = 0.0; angle < 360.0; angle += (360.0 / NUM_VERTICES_IN_SHAPE)) {
+            double radAngle = angle * Math.PI / 180;
+            vertices.Add(new Vector3(thicknessFactor * (float) Math.Cos(radAngle), 0, thicknessFactor * (float) Math.Sin(radAngle)));
         }
 
         CalculateBranch(new Vector3(0, 0, 0), basePos, heightFactor, rootBranch.GetLevelNum());
@@ -54,24 +55,29 @@ public class TreeGenerator : MonoBehaviour {
         topCenter = dir + rootPos;
 
         // calculate top vertices
-        float thickness = thicknessFactor * numLevels * 0.5f / levelNum;
-        for (double angle = 0.0; angle < 360.0; angle +=  360.0 / NUM_VERTICES_IN_SHAPE) {
-            vertices.Add(new Vector3(topCenter.x + thickness * (float) Math.Cos(angle), topCenter.y, topCenter.z + thickness * (float) Math.Sin(angle)));
+        int thickness = (int) (thicknessFactor * numLevels * 0.5f) / levelNum;
+        for (double angle = 0.0; angle < 360.0; angle += (360.0 / NUM_VERTICES_IN_SHAPE)) {
+            double radAngle = angle * Math.PI / 180;
+            vertices.Add(new Vector3(topCenter.x + thickness * (float) Math.Cos(radAngle), topCenter.y, topCenter.z + thickness * (float) Math.Sin(radAngle)));
         }
 
         // Calculate triangles using previous vertices as base; there should be 2 * NUM_VERTICES_IN_SHAPE = 12 triangles
-        for (int vertex = (branches.Count - 1) * 2; vertex < NUM_VERTICES_IN_SHAPE; vertex++) {
-            triangles.Add(vertex);
+        for (int vertex = (branches.Count - 1) * 2 * NUM_VERTICES_IN_SHAPE; vertex < (branches.Count - 1) * 2 * NUM_VERTICES_IN_SHAPE + NUM_VERTICES_IN_SHAPE; vertex++) {
+            triangles.Add(vertex + NUM_VERTICES_IN_SHAPE);
             if ((vertex + 1) % NUM_VERTICES_IN_SHAPE == 0) {
                 triangles.Add(vertex + 1 - NUM_VERTICES_IN_SHAPE);
             } else {
                 triangles.Add(vertex + 1);
             }
-            triangles.Add(vertex + NUM_VERTICES_IN_SHAPE - 1);
-
             triangles.Add(vertex);
-            triangles.Add(vertex + NUM_VERTICES_IN_SHAPE - 1);
+
             triangles.Add(vertex + NUM_VERTICES_IN_SHAPE);
+            if ((vertex + 1 + NUM_VERTICES_IN_SHAPE) % NUM_VERTICES_IN_SHAPE == 0) {
+                triangles.Add(vertex + 1);
+            } else {
+                triangles.Add(vertex + 1 + NUM_VERTICES_IN_SHAPE);
+            }
+            triangles.Add(vertex);
         }
     }
 
