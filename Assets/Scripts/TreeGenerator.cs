@@ -12,14 +12,16 @@ public class TreeGenerator : MonoBehaviour {
     List<int> triangles;
     const int NUM_VERTICES_IN_SHAPE = 6;
 
-    Vector3 basePosition;
+    public Vector3 basePosition;
+    public DateTime dateCreated;
     int numLevels = 0;
-    float heightFactor = 1;
-    float thicknessFactor = 0.1f;
+    float heightFactor;
+    float thicknessFactor;
     List<Branch> branches;
 
-    public void SpawnTree(Vector3 basePos) {
+    public void SpawnTree(Vector3 basePos, DateTime date) {
         basePosition = basePos;
+        dateCreated = date;
         mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
 
@@ -27,6 +29,7 @@ public class TreeGenerator : MonoBehaviour {
         branches = new List<Branch>();
         branches.Add(rootBranch);
         numLevels = 1;
+        UpdateThicknessAndHeight();
 
         // calculate base vertices
         vertices = new List<Vector3>();
@@ -36,23 +39,33 @@ public class TreeGenerator : MonoBehaviour {
             vertices.Add(new Vector3(thicknessFactor * (float) Math.Cos(radAngle), 0, thicknessFactor * (float) Math.Sin(radAngle)));
         }
 
-        CalculateBranch(new Vector3(0, 0, 0), basePos, heightFactor, rootBranch.GetLevelNum());
+        CalculateBranch(new Vector3(0, 0, 0), basePos, rootBranch.GetLevelNum(), rootBranch);
 
         UpdateMesh();
     }
 
-    void NewBranch() {
+    void NewBranch(Branch parent) {
+        Branch newBranch = new Branch("", parent, null, parent.GetLevelNum() + 1);
+        parent.AddChild(newBranch);
 
-        
+        Vector3 topPos = parent.GetTop();
+        Vector3 basePos = parent.GetBase();
+
+        // calculate rotatation
+
+        // CalculateBranch(some offset of parent avoiding siblings, topPos, newBranch.GetLevelNum());
 
     }
 
-    void CalculateBranch(Vector3 rotation, Vector3 rootPos, float length, int levelNum) {
+    void CalculateBranch(Vector3 rotation, Vector3 rootPos, int levelNum, Branch branch) {
         // calculate center of top face using rotation and length factor
         Vector3 topCenter = new Vector3(0, heightFactor / (levelNum * 0.5f), 0);
         Vector3 dir = topCenter - rootPos;
         dir = Quaternion.Euler(rotation) * dir;
         topCenter = dir + rootPos;
+
+        branch.SetTop(topCenter);
+        branch.SetBase(rootPos);
 
         // calculate top vertices
         int thickness = (int) (thicknessFactor * numLevels * 0.5f) / levelNum;
@@ -80,16 +93,10 @@ public class TreeGenerator : MonoBehaviour {
             triangles.Add(vertex);
         }
     }
-
-    void CalculateLengths() { 
-
-    }
-
-    void CalculateThicknesses() {
-        
-    }
     
     void UpdateMesh() {
+        UpdateThicknessAndHeight();
+
         mesh.Clear();
         mesh.vertices = vertices.ToArray();
         mesh.triangles = triangles.ToArray();
@@ -98,5 +105,19 @@ public class TreeGenerator : MonoBehaviour {
 
         // GetComponent<MeshCollider>().sharedMesh = null;
         // GetComponent<MeshCollider>().sharedMesh = mesh;
+    }
+
+    void ReloadMesh() {
+        UpdateThicknessAndHeight();
+
+    }
+
+    void UpdateThicknessAndHeight() {
+        if (thicknessFactor < 2) {
+            thicknessFactor = 0.1f + 0.1f * (DateTime.Now - dateCreated).TotalDays;
+        } else {
+            thicknessFactor = 0.1f;
+        }
+        heightFactor = 0.5f + 0.5f * branches.Count;
     }
 }

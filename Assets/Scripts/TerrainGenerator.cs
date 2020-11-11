@@ -35,9 +35,28 @@ public class TerrainGenerator : MonoBehaviour {
         RaycastHit hit;
 
         if (Physics.Raycast(ray, out hit, 100f) && hit.collider.gameObject.name == transform.root.gameObject.name) {
-            //TODO: Checks to make sure spawn location is far enough from other trees
-            GameObject tree = Instantiate(treePrefab, hit.point, Quaternion.identity);
-            tree.GetComponent<TreeGenerator>().SpawnTree(hit.point);
+            //Checks to make sure spawn location is far enough from other trees
+            bool validPos = true;
+            float x1 = hit.point.x;
+            float z1 = hit.point.z;
+            for (int i = 0; i < Manager.trees.Count; i++) {
+                GameObject tree = Manager.trees[i];
+                Vector3 basePosition = tree.GetComponent<TreeGenerator>().basePosition;
+                float x2 = basePosition.x;
+                float z2 = basePosition.z;
+                if (((x1 - x2) * (x1 - x2) + (z1 - z2) * (z1 - z2)) < 2 * 2) { // tree must be farther than some distance away from any other tree
+                    validPos = false;
+                    break;
+                }
+            }
+
+            // generate the tree
+            if (validPos) {
+                GameObject tree = Instantiate(treePrefab, hit.point, Quaternion.identity);
+                DateTime date = DateTime.Now;
+                tree.GetComponent<TreeGenerator>().SpawnTree(hit.point, date);
+                Manager.trees.Add(tree);
+            }
         }    
     }
 

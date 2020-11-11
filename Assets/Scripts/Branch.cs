@@ -7,12 +7,15 @@ public class Branch {
     Branch parent;
     List<Branch> children;
     int levelNum;
+    Vector3 top;
+    Vector3 bottom;
 
     public Branch(string text, Branch parent, List<Branch> children, int levelNum) {
         this.text = text;
         this.parent = parent;
         this.children = children;
         this.levelNum = levelNum;
+
     }
 
     public void AddChild(Branch child) {
@@ -37,5 +40,20 @@ public class Branch {
 
     public int GetLevelNum() {
         return levelNum;
+    }
+
+    public void SetTop(Vector3 pos) {
+        top = pos;
+    }
+
+    public Vector3 GetTop() {
+        return top;
+    }
+    public void SetBase(Vector3 pos) {
+        bottom = pos;
+    }
+
+    public Vector3 GetBase() {
+        return bottom;
     }
 }

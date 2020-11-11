@@ -1,5 +1,5 @@
 using UnityEngine;
 
-public class Manager : MonoBehaviour {
-
+public class Manager {
+    static List<GameObject> trees = new List<GameObject>();
 }
