@@ -55,17 +55,19 @@ public class TreeGenerator : MonoBehaviour {
         // offset rotation to avoid siblings and look natural
         List<Vector3> siblings = parent.GetChildren();
         System.Random random = new System.Random();
-        float verticalOffset = random.Next(-30, 30);
+        float verticalOffset = random.Next(-45, 10);
+        if (verticalOffset == 0) { verticalOffset -= 5; }
         float horizontalOffset = -80 + (siblings.Count - 1) * 10f; 
         
-        // calculate vertical axis (orthogonal to parent) and apply rotation
+        // apply vertical rotation
+        rotation.x += verticalOffset * Math.Cos(rotation.x);
+        rotation.z += verticalOffset * Math.Sin(rotation.z);
 
         // apply horizontal rotation
         rotation.y += horizontalOffset;
 
-
-        // CalculateBranch(some offset of parent avoiding siblings, basePos, newBranch.GetLevelNum());
-
+        // calculate branch
+        CalculateBranch(rotation, basePos, newBranch.GetLevelNum());
     }
 
     void CalculateBranch(Vector3 rotation, Vector3 rootPos, int levelNum, Branch branch) {
