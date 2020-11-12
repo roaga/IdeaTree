@@ -9,6 +9,7 @@ public class Branch {
     int levelNum;
     Vector3 top;
     Vector3 bottom;
+    Vector3 rotation;
 
     public Branch(string text, Branch parent, List<Branch> children, int levelNum) {
         this.text = text;
@@ -55,5 +56,13 @@ public class Branch {
 
     public Vector3 GetBase() {
         return bottom;
+    }
+
+    public void SetRotation(Vector3 rotation) {
+        this.rotation = rotation;
+    }
+
+    public Vector3 GetRotation() {
+        return rotation;
     }
 }

@@ -48,12 +48,13 @@ public class TreeGenerator : MonoBehaviour {
         Branch newBranch = new Branch("", parent, null, parent.GetLevelNum() + 1);
         parent.AddChild(newBranch);
 
-        Vector3 topPos = parent.GetTop();
-        Vector3 basePos = parent.GetBase();
+        Vector3 basePos = parent.GetTop();
+        Vector3 rotation = parent.GetRotation();
 
-        // calculate rotatation
+        // offset rotation to avoid siblings and look natural
 
-        // CalculateBranch(some offset of parent avoiding siblings, topPos, newBranch.GetLevelNum());
+
+        // CalculateBranch(some offset of parent avoiding siblings, basePos, newBranch.GetLevelNum());
 
     }
 
@@ -66,6 +67,7 @@ public class TreeGenerator : MonoBehaviour {
 
         branch.SetTop(topCenter);
         branch.SetBase(rootPos);
+        branch.SetRotation(rotation);
 
         // calculate top vertices
         int thickness = (int) (thicknessFactor * numLevels * 0.5f) / levelNum;
