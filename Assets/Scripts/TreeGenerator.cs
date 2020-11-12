@@ -49,9 +49,19 @@ public class TreeGenerator : MonoBehaviour {
         parent.AddChild(newBranch);
 
         Vector3 basePos = parent.GetTop();
+        Vector3 parentBasePos = parent.GetBase();
         Vector3 rotation = parent.GetRotation();
 
         // offset rotation to avoid siblings and look natural
+        List<Vector3> siblings = parent.GetChildren();
+        System.Random random = new System.Random();
+        float verticalOffset = random.Next(-30, 30);
+        float horizontalOffset = -80 + (siblings.Count - 1) * 10f; 
+        
+        // calculate vertical axis (orthogonal to parent) and apply rotation
+
+        // apply horizontal rotation
+        rotation.y += horizontalOffset;
 
 
         // CalculateBranch(some offset of parent avoiding siblings, basePos, newBranch.GetLevelNum());
