@@ -112,6 +112,12 @@ public class TreeGenerator : MonoBehaviour {
     void ReloadMesh() {
         UpdateThicknessAndHeight();
 
+        // load save data and set mesh and triangles, branches
+
+    }
+
+    void SaveData() { 
+        // save mesh and triangles, branches data
     }
 
     void UpdateThicknessAndHeight() {
