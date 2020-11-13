@@ -6,6 +6,7 @@ using System;
 public class TreeGenerator : MonoBehaviour {
 
     public GameObject leaves;
+    public List<Button[]> branchButtons;
 
     Mesh mesh;
     List<Vector3> vertices;
@@ -60,8 +61,8 @@ public class TreeGenerator : MonoBehaviour {
         float horizontalOffset = -80 + (siblings.Count - 1) * 10f; 
         
         // apply vertical rotation
-        rotation.x += verticalOffset * Math.Sin(rotation.x);
-        rotation.z += verticalOffset * Math.Cos(rotation.z);
+        rotation.x += verticalOffset * 0.5;
+        rotation.z += verticalOffset * 0.5;
 
         // apply horizontal rotation
         rotation.y += horizontalOffset;
