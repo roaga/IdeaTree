@@ -61,8 +61,8 @@ public class TreeGenerator : MonoBehaviour {
         float horizontalOffset = -80 + (siblings.Count - 1) * 10f; 
         
         // apply vertical rotation
-        rotation.x += verticalOffset * 0.5;
-        rotation.z += verticalOffset * 0.5;
+        rotation.x += verticalOffset * Math.Sin(rotation.x);
+        rotation.z += verticalOffset * Math.Cos(rotation.z);
 
         // apply horizontal rotation
         rotation.y += horizontalOffset;
