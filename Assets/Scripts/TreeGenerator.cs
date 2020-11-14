@@ -6,7 +6,7 @@ using System;
 public class TreeGenerator : MonoBehaviour {
 
     public GameObject leaves;
-    public List<Button[]> branchButtons;
+    public GameObject branchButtons;
 
     Mesh mesh;
     List<Vector3> vertices;
@@ -54,21 +54,21 @@ public class TreeGenerator : MonoBehaviour {
         Vector3 rotation = parent.GetRotation();
 
         // offset rotation to avoid siblings and look natural
-        List<Vector3> siblings = parent.GetChildren();
+        List<Branch> siblings = parent.GetChildren();
         System.Random random = new System.Random();
         float verticalOffset = random.Next(-45, 10);
         if (verticalOffset == 0) { verticalOffset -= 5; }
         float horizontalOffset = -80 + (siblings.Count - 1) * 10f; 
         
         // apply vertical rotation
-        rotation.x += verticalOffset * Math.Sin(rotation.x);
-        rotation.z += verticalOffset * Math.Cos(rotation.z);
+        rotation.x += verticalOffset * (float) Math.Sin(rotation.x);
+        rotation.z += verticalOffset * (float) Math.Cos(rotation.z);
 
         // apply horizontal rotation
         rotation.y += horizontalOffset;
 
         // calculate branch
-        CalculateBranch(rotation, basePos, newBranch.GetLevelNum());
+        CalculateBranch(rotation, basePos, newBranch.GetLevelNum(), newBranch);
     }
 
     void CalculateBranch(Vector3 rotation, Vector3 rootPos, int levelNum, Branch branch) {
@@ -135,7 +135,7 @@ public class TreeGenerator : MonoBehaviour {
 
     void UpdateThicknessAndHeight() {
         if (thicknessFactor < 2) {
-            thicknessFactor = 0.1f + 0.1f * (DateTime.Now - dateCreated).TotalDays;
+            thicknessFactor = 0.1f + 0.1f * (float) (DateTime.Now - dateCreated).TotalDays;
         } else {
             thicknessFactor = 0.1f;
         }
