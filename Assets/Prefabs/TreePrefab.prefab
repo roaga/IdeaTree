@@ -46,6 +46,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   leaves: {fileID: 0}
+  branchButtons: {fileID: 4682171227504547481, guid: 1a48e897814e846fe8b26d234207e9be,
+    type: 3}
+  basePosition: {x: 0, y: 0, z: 0}
 --- !u!33 &3274657152860748517
 MeshFilter:
   m_ObjectHideFlags: 0

@@ -10,6 +10,7 @@ public class Branch {
     Vector3 top;
     Vector3 bottom;
     Vector3 rotation;
+    GameObject buttonArray;
 
     public Branch(string text, Branch parent, List<Branch> children, int levelNum) {
         this.text = text;
@@ -64,5 +65,9 @@ public class Branch {
 
     public Vector3 GetRotation() {
         return rotation;
+    }
+
+    public void SetButtonArray(GameObject buttonArray) { 
+        this.buttonArray = buttonArray;
     }
 }

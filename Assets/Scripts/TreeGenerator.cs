@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using UnityEngine.UI;
 
 public class TreeGenerator : MonoBehaviour {
 
@@ -69,6 +70,19 @@ public class TreeGenerator : MonoBehaviour {
 
         // calculate branch
         CalculateBranch(rotation, basePos, newBranch.GetLevelNum(), newBranch);
+
+        // instantiate buttons
+        Vector3 buttonPos = new Vector3(0, 0.5f * heightFactor / (newBranch.GetLevelNum() * 0.5f), 0);
+        Vector3 dir = buttonPos - basePos;
+        dir = Quaternion.Euler(rotation) * dir;
+        buttonPos = dir + basePos;
+        GameObject buttons = Instantiate(branchButtons, buttonPos, Quaternion.identity);
+        Button newButton = buttons.transform.Find("NewBranchButton").gameObject.GetComponent<Button>();
+        Button editButton = buttons.transform.Find("EditBranchButton").gameObject.GetComponent<Button>();
+        Button deleteButton = buttons.transform.Find("DeleteBranchButton").gameObject.GetComponent<Button>();
+        newButton.onClick.AddListener(() => ButtonActions(newButton));
+        editButton.onClick.AddListener(() => ButtonActions(editButton));
+        deleteButton.onClick.AddListener(() => ButtonActions(deleteButton));
     }
 
     void CalculateBranch(Vector3 rotation, Vector3 rootPos, int levelNum, Branch branch) {
@@ -140,5 +154,9 @@ public class TreeGenerator : MonoBehaviour {
             thicknessFactor = 0.1f;
         }
         heightFactor = 0.5f + 0.5f * branches.Count;
+    }
+
+    void ButtonActions(Button button) {
+
     }
 }
