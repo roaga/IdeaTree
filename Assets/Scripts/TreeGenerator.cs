@@ -163,9 +163,11 @@ public class TreeGenerator : MonoBehaviour {
     }
 
     void GenerateLeaves() {
-        for (int i = NUM_VERTICES_IN_SHAPE; i < vertices.Count; i += NUM_VERTICES_IN_SHAPE * 2) {
+        for (int i = NUM_VERTICES_IN_SHAPE; i < vertices.Count; i += NUM_VERTICES_IN_SHAPE) {
             for (int j = 0; j < NUM_VERTICES_IN_SHAPE; j += (NUM_VERTICES_IN_SHAPE / branches.Count / 2)) {
-                Instantiate(leaves, vertices[i + j] + basePosition, UnityEngine.Random.rotation);
+                Instantiate(leaves, (vertices[i + j] + vertices[i + j - 6]) / 1.1f + basePosition, UnityEngine.Random.rotation);
+                Instantiate(leaves, (vertices[i + j] + vertices[i + j - 6]) / 1.3f + basePosition, UnityEngine.Random.rotation);
+                Instantiate(leaves, (vertices[i + j] + vertices[i + j - 6]) / 1.7f + basePosition, UnityEngine.Random.rotation);
             }
         }
     }
