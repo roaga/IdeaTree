@@ -125,6 +125,7 @@ public class TreeGenerator : MonoBehaviour {
     
     void UpdateMesh() {
         UpdateThicknessAndHeight();
+        GenerateLeaves();
 
         mesh.Clear();
         mesh.vertices = vertices.ToArray();
@@ -138,6 +139,7 @@ public class TreeGenerator : MonoBehaviour {
 
     void ReloadMesh() {
         UpdateThicknessAndHeight();
+        GenerateLeaves();
 
         // load save data and set mesh and triangles, branches
 
@@ -158,5 +160,13 @@ public class TreeGenerator : MonoBehaviour {
 
     void ButtonActions(Button button) {
 
+    }
+
+    void GenerateLeaves() {
+        for (int i = NUM_VERTICES_IN_SHAPE; i < vertices.Count; i += NUM_VERTICES_IN_SHAPE * 2) {
+            for (int j = 0; j < NUM_VERTICES_IN_SHAPE; j += (NUM_VERTICES_IN_SHAPE / branches.Count / 2)) {
+                Instantiate(leaves, vertices[i + j] + basePosition, UnityEngine.Random.rotation);
+            }
+        }
     }
 }
