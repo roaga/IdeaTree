@@ -9,9 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6672194432935736347}
-  - component: {fileID: 6672194432935736344}
   - component: {fileID: 3274657152860748517}
   - component: {fileID: 3605959305749418592}
+  - component: {fileID: 250281000693513892}
+  - component: {fileID: -9138255816454214559}
   m_Layer: 0
   m_Name: TreePrefab
   m_TagString: Untagged
@@ -33,22 +34,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6672194432935736344
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6672194432935736345}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3bc9b33a8c43b4c1d8ddcfe556ae3bc2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  leaves: {fileID: 4694071344260374007, guid: 7ca37aef5b7cc44889f22b0f2163b2f7, type: 3}
-  branchButtons: {fileID: 4682171227504547481, guid: 1a48e897814e846fe8b26d234207e9be,
-    type: 3}
-  basePosition: {x: 0, y: 0, z: 0}
 --- !u!33 &3274657152860748517
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -96,3 +81,33 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!114 &250281000693513892
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6672194432935736345}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bc9b33a8c43b4c1d8ddcfe556ae3bc2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leaves: {fileID: 4694071344260374007, guid: 7ca37aef5b7cc44889f22b0f2163b2f7, type: 3}
+  branchButtons: {fileID: 4682171227504547481, guid: 1a48e897814e846fe8b26d234207e9be,
+    type: 3}
+  basePosition: {x: 0, y: 0, z: 0}
+--- !u!64 &-9138255816454214559
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6672194432935736345}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 0}

@@ -34,7 +34,7 @@ public class TerrainGenerator : MonoBehaviour {
         Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
         RaycastHit hit;
 
-        if (Physics.Raycast(ray, out hit, 100f) && hit.collider.gameObject.name == transform.root.gameObject.name) {
+        if (Physics.Raycast(ray, out hit, 100f) && hit.collider.gameObject.name == "Terrain" && !Manager.editorOpen) {
             //Checks to make sure spawn location is far enough from other trees
             bool validPos = true;
             float x1 = hit.point.x;
@@ -57,7 +57,7 @@ public class TerrainGenerator : MonoBehaviour {
                 tree.GetComponent<TreeGenerator>().SpawnTree(hit.point, date);
                 Manager.trees.Add(tree);
             }
-        }    
+        }
     }
 
     void CreateShape() {
