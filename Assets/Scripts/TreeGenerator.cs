@@ -72,7 +72,7 @@ public class TreeGenerator : MonoBehaviour {
         CalculateBranch(rotation, basePos, newBranch.GetLevelNum(), newBranch);
     }
 
-    void CalculateBranch(Vector3 rotation, Vector3 rootPos, int levelNum, Branch branch) {
+    void CalculateBranch(Vector3 rotation, Vector3 rootPos, int levelNum, Branch branch) { // TODO: Fix for non root branches
         // calculate center of top face using rotation and length factor
         Vector3 topCenter = new Vector3(0, heightFactor / (levelNum * 0.5f), 0);
         Vector3 dir = topCenter - rootPos;
@@ -117,10 +117,8 @@ public class TreeGenerator : MonoBehaviour {
         GameObject buttons = GameObject.Instantiate(branchButtons, basePosition + buttonPos, Quaternion.identity) as GameObject;
         Button newButton = buttons.transform.Find("Canvas").Find("NewBranchButton").gameObject.GetComponent<Button>();
         Button editButton = buttons.transform.Find("Canvas").Find("EditBranchButton").gameObject.GetComponent<Button>();
-        Button deleteButton = buttons.transform.Find("Canvas").Find("DeleteBranchButton").gameObject.GetComponent<Button>();
-        newButton.onClick.AddListener(() => ButtonActions("newButton"));
-        editButton.onClick.AddListener(() => ButtonActions("editButton"));
-        deleteButton.onClick.AddListener(() => ButtonActions("deleteButton"));
+        newButton.onClick.AddListener(() => ButtonActions("newButton", branch));
+        editButton.onClick.AddListener(() => ButtonActions("editButton", branch));
     }
     
     void UpdateMesh() {
@@ -158,15 +156,19 @@ public class TreeGenerator : MonoBehaviour {
         heightFactor = 0.5f + 0.5f * branches.Count;
     }
 
-    void ButtonActions(String button) {
-        Debug.Log("Button pressed");
+    void ButtonActions(String button, Branch parent) {
         if (button == "newButton") {
-
+            if (parent.GetChildren().Count < 10 && numLevels < 10) {
+                NewBranch(parent);
+                Debug.Log("Creating new branch...");
+            } else {
+                // TODO: show message saying can't add more branches
+                Debug.Log("Can't add more branches here");
+            }
         } else if (button == "editButton") {
-
-        } else if (button == "deleteButton") {
-            
-        }
+            // TODO: show editor UI
+            Debug.Log("Editing this branch...");
+        } 
     }
 
     void GenerateLeaves() {
@@ -185,7 +187,6 @@ public class TreeGenerator : MonoBehaviour {
 
         if (Physics.Raycast(ray, out hit, 100f) && hit.collider.gameObject.name.Contains("TreePrefab") && !Manager.editorOpen) {
             Manager.editorOpen = true;
-            Debug.Log("Tree clicked");
         }   
     }
 }

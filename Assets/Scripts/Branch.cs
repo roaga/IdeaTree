@@ -15,7 +15,7 @@ public class Branch {
     public Branch(string text, Branch parent, List<Branch> children, int levelNum) {
         this.text = text;
         this.parent = parent;
-        this.children = children;
+        this.children = children == null ? new List<Branch>() : children;
         this.levelNum = levelNum;
 
     }
