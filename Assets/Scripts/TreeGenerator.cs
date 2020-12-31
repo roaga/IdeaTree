@@ -158,9 +158,9 @@ public class TreeGenerator : MonoBehaviour {
         heightFactor = 0.5f + 0.5f * branches.Count;
 
         if (vertices != null) {
-            for (int i = 0; i < vertices.Count; i++) {
+            for (int i = 0; i < vertices.Count - 6; i++) {
                 Vector3 vertex = vertices[i];
-                vertex.y *= heightFactor;
+                vertex = new Vector3(vertex.x, vertex.y * heightFactor, vertex.z);
                 vertices[i] = vertex;
             }
         }
@@ -182,7 +182,7 @@ public class TreeGenerator : MonoBehaviour {
     }
 
     void GenerateLeaves() {
-        for (int i = NUM_VERTICES_IN_SHAPE; i < vertices.Count; i += NUM_VERTICES_IN_SHAPE) {
+        for (int i = vertices.Count - NUM_VERTICES_IN_SHAPE; i < vertices.Count; i += NUM_VERTICES_IN_SHAPE) {
             for (int j = 0; j < NUM_VERTICES_IN_SHAPE; j += (NUM_VERTICES_IN_SHAPE / branches.Count / 2)) {
                 Instantiate(leaves, (vertices[i + j] + vertices[i + j - 6]) / 1.1f + basePosition, UnityEngine.Random.rotation);
                 Instantiate(leaves, (vertices[i + j] + vertices[i + j - 6]) / 1.3f + basePosition, UnityEngine.Random.rotation);
