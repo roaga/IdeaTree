@@ -156,6 +156,16 @@ public class TreeGenerator : MonoBehaviour {
             thicknessFactor = 0.1f;
         }
         heightFactor = 0.5f + 0.5f * branches.Count;
+
+        if (vertices != null) {
+            for (int i = 0; i < vertices.Count; i++) {
+                Vector3 vertex = vertices[i];
+                vertex.y *= heightFactor;
+                vertex.x *= thicknessFactor;
+                vertex.z *= thicknessFactor;
+                vertices[i] = vertex;
+            }
+        }
     }
 
     void ButtonActions(String button, Branch parent) {
