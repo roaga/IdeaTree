@@ -57,13 +57,13 @@ public class TreeGenerator : MonoBehaviour {
         // offset rotation to avoid siblings and look natural
         List<Branch> siblings = parent.GetChildren();
         System.Random random = new System.Random();
-        float verticalOffset = random.Next(-45, 10);
-        if (verticalOffset == 0) { verticalOffset -= 5; }
-        float horizontalOffset = -80 + (siblings.Count - 1) * 10f; 
+        float verticalOffset = random.Next(-45, -5);
+        if (verticalOffset == 0) { verticalOffset = -5; }
+        float horizontalOffset = -80 + (siblings.Count - 1) * 20f; 
         
         // apply vertical rotation
-        rotation.x -= verticalOffset * (float) Math.Sin(rotation.x);
-        rotation.z -= verticalOffset * (float) Math.Cos(rotation.z);
+        rotation.x += verticalOffset + (float) Math.Sin(rotation.x);
+        rotation.z += verticalOffset + (float) Math.Cos(rotation.z);
 
         // apply horizontal rotation
         rotation.y += horizontalOffset;
@@ -74,9 +74,9 @@ public class TreeGenerator : MonoBehaviour {
         UpdateMesh();
     }
 
-    void CalculateBranch(Vector3 rotation, Vector3 rootPos, int levelNum, Branch branch) { // TODO: Fix for non root branches
+    void CalculateBranch(Vector3 rotation, Vector3 rootPos, int levelNum, Branch branch) {
         // calculate center of top face using rotation and length factor
-        Vector3 topCenter = new Vector3(0, heightFactor / (levelNum * 0.5f), 0);
+        Vector3 topCenter = new Vector3(0, 0.5f * heightFactor / (levelNum * 0.5f), 0);
         Vector3 dir = topCenter - rootPos;
         dir = Quaternion.Euler(rotation) * dir;
         topCenter = dir + rootPos;
@@ -112,10 +112,11 @@ public class TreeGenerator : MonoBehaviour {
         }
 
         // instantiate buttons
-        Vector3 buttonPos = new Vector3(0, 0.5f * heightFactor / (levelNum* 0.5f), 0);
-        // Vector3 dir = buttonPos - basePos;
-        // dir = Quaternion.Euler(rotation) * dir;
+        Vector3 buttonPos = new Vector3(0, 0.4f * heightFactor / (levelNum * 0.5f), 0);
+        dir = buttonPos - rootPos;
+        dir = Quaternion.Euler(rotation) * dir;
         buttonPos = dir + rootPos;
+    
         GameObject buttons = GameObject.Instantiate(branchButtons, basePosition + buttonPos, Quaternion.identity) as GameObject;
         Button newButton = buttons.transform.Find("Canvas").Find("NewBranchButton").gameObject.GetComponent<Button>();
         Button editButton = buttons.transform.Find("Canvas").Find("EditBranchButton").gameObject.GetComponent<Button>();
