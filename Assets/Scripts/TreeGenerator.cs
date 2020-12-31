@@ -138,9 +138,6 @@ public class TreeGenerator : MonoBehaviour {
     }
 
     void ReloadMesh() {
-        UpdateThicknessAndHeight();
-        GenerateLeaves();
-
         // load save data and set mesh and triangles, branches
 
     }
