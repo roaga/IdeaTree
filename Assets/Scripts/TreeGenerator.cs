@@ -62,14 +62,16 @@ public class TreeGenerator : MonoBehaviour {
         float horizontalOffset = -80 + (siblings.Count - 1) * 10f; 
         
         // apply vertical rotation
-        rotation.x += verticalOffset * (float) Math.Sin(rotation.x);
-        rotation.z += verticalOffset * (float) Math.Cos(rotation.z);
+        rotation.x -= verticalOffset * (float) Math.Sin(rotation.x);
+        rotation.z -= verticalOffset * (float) Math.Cos(rotation.z);
 
         // apply horizontal rotation
         rotation.y += horizontalOffset;
 
         // calculate branch
         CalculateBranch(rotation, basePos, newBranch.GetLevelNum(), newBranch);
+
+        UpdateMesh();
     }
 
     void CalculateBranch(Vector3 rotation, Vector3 rootPos, int levelNum, Branch branch) { // TODO: Fix for non root branches
@@ -128,10 +130,9 @@ public class TreeGenerator : MonoBehaviour {
         mesh.Clear();
         mesh.vertices = vertices.ToArray();
         mesh.triangles = triangles.ToArray();
-
+        mesh.RecalculateBounds();
         mesh.RecalculateNormals();
 
-        GetComponent<MeshCollider>().sharedMesh = null;
         GetComponent<MeshCollider>().sharedMesh = mesh;
     }
 
