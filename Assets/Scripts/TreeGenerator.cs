@@ -161,8 +161,6 @@ public class TreeGenerator : MonoBehaviour {
             for (int i = 0; i < vertices.Count; i++) {
                 Vector3 vertex = vertices[i];
                 vertex.y *= heightFactor;
-                vertex.x *= thicknessFactor;
-                vertex.z *= thicknessFactor;
                 vertices[i] = vertex;
             }
         }
