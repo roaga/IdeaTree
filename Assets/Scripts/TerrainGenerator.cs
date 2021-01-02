@@ -67,12 +67,19 @@ public class TerrainGenerator : MonoBehaviour {
 
         for (int i = 0, z = 0; z <= zSize; z++) {
             for (int x = 0; x <= xSize; x++) {
-                float y = Mathf.PerlinNoise(x * 0.3f, z * 0.3f) * 2f;
-                y += Mathf.PerlinNoise(x * 0.2f, z * 0.2f) * 3f;
+                float y;
+                if (xSize == x|| zSize == z|| x == 0 || z == 0) {
+                    y = 0f;
+                } else if (xSize - x <= 2 || zSize - z <= 2 || x <= 2 || z <= 2) {
+                    y = Mathf.PerlinNoise(x * 0.3f, z * 0.3f) * 2f;
+                } else {
+                    y = Mathf.PerlinNoise(x * 0.3f, z * 0.3f) * 2f;
+                    y += Mathf.PerlinNoise(x * 0.2f, z * 0.2f) * 3f;
+                }
                 vertices[i] = new Vector3(x, y, z);
 
                 // grass spawn
-                if (y < 2.5) { // avoid hills
+                if (y < 2.5 && random.Next(0, 10) < 7) { // avoid hills
                     Instantiate(grassPatch, new Vector3(x, y, z), Quaternion.identity);
                     Instantiate(grassPatch, new Vector3(Math.Abs(x - 0.2f), y, Math.Abs(z - 0.2f)), Quaternion.identity);
                     Instantiate(grassPatch, new Vector3(Math.Abs(x + 0.2f), y, Math.Abs(z + 0.2f)), Quaternion.identity);
