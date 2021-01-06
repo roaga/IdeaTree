@@ -91,7 +91,7 @@ public class CameraController : MonoBehaviour
         }
 
         if (transform.position.x < -15 || transform.position.x > 30 || transform.position.y < 4 || transform.position.y > 20 
-            || transform.position.z < -15 || transform.position.z > 30 ) {
+            || transform.position.z < -15 || transform.position.z > 30 || Manager.notepadOpen) {
                 transform.position = prevPos;
         } else {
             prevPos = transform.position;
@@ -105,7 +105,7 @@ public class CameraController : MonoBehaviour
         }
 
         float axis = Input.GetAxis("Mouse ScrollWheel");
-        if (axis != 0)
+        if (axis != 0 && !Manager.notepadOpen)
         {
             var zoomSensitivity = fastMode ? this.fastZoomSensitivity : this.zoomSensitivity;
             transform.position = transform.position + transform.forward * axis * zoomSensitivity;
