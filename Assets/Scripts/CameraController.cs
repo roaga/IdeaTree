@@ -49,6 +49,12 @@ public class CameraController : MonoBehaviour
     /// </summary>
     private bool looking = false;
 
+    Vector3 prevPos;
+
+    void Start() {
+        prevPos = transform.position;
+    }
+
     void Update()
     {
         var fastMode = false; //Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
@@ -82,6 +88,13 @@ public class CameraController : MonoBehaviour
         if (Input.GetKey(KeyCode.Space))
         {
             transform.position = transform.position + (Vector3.up * movementSpeed * Time.deltaTime);
+        }
+
+        if (transform.position.x < -15 || transform.position.x > 30 || transform.position.y < 4 || transform.position.y > 20 
+            || transform.position.z < -15 || transform.position.z > 30 ) {
+                transform.position = prevPos;
+        } else {
+            prevPos = transform.position;
         }
 
         if (looking)
