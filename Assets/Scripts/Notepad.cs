@@ -24,5 +24,6 @@ public class Notepad : MonoBehaviour
             Manager.notepadOpen = false;
         }
         
+        // TODO: save text to branch
     }
 }
