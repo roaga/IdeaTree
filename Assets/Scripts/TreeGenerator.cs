@@ -173,8 +173,8 @@ public class TreeGenerator : MonoBehaviour {
                 Debug.Log("Can't add more branches here");
             }
         } else if (button == "editButton") {
-            // TODO: show editor UI
             Debug.Log("Editing this branch...");
+            Manager.notepadOpen = true;
         } 
     }
 
