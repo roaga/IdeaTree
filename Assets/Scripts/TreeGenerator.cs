@@ -174,8 +174,8 @@ public class TreeGenerator : MonoBehaviour {
             }
         } else if (button == "editButton") {
             Debug.Log("Editing this branch...");
+            Notepad.SetBranch(parent);
             Manager.notepadOpen = true;
-            //TODO: open notepad with correct text for branch
         } 
     }
 
