@@ -120,8 +120,10 @@ public class TreeGenerator : MonoBehaviour {
         GameObject buttons = GameObject.Instantiate(branchButtons, basePosition + buttonPos, Quaternion.identity) as GameObject;
         Button newButton = buttons.transform.Find("Canvas").Find("NewBranchButton").gameObject.GetComponent<Button>();
         Button editButton = buttons.transform.Find("Canvas").Find("EditBranchButton").gameObject.GetComponent<Button>();
+        Button deleteButton = buttons.transform.Find("Canvas").Find("DeleteBranchButton").gameObject.GetComponent<Button>();
         newButton.onClick.AddListener(() => ButtonActions("newButton", branch));
         editButton.onClick.AddListener(() => ButtonActions("editButton", branch));
+        deleteButton.onClick.AddListener(() => ButtonActions("deleteButton", branch));
     }
     
     void UpdateMesh() {
@@ -174,9 +176,15 @@ public class TreeGenerator : MonoBehaviour {
             }
         } else if (button == "editButton") {
             Debug.Log("Editing this branch...");
-            Notepad.SetBranch(parent);
-            Manager.notepadOpen = true;
-        } 
+            if (!Manager.notepadOpen) {
+                Notepad.SetBranch(parent);
+                Manager.notepadOpen = true;
+            } else {
+                Manager.editorOpen = false;
+            }
+        } else if (button == "deleteButton") {
+            // TODO
+        }
     }
 
     void GenerateLeaves() {
