@@ -11,7 +11,7 @@ public class Branch {
     Vector3 bottom;
     Vector3 rotation;
     GameObject buttonArray;
-    public String id;
+    public string id;
 
     public Branch(string text, Branch parent, List<Branch> children, int levelNum) {
         this.text = text;
@@ -42,7 +42,7 @@ public class Branch {
         return children;
     }
 
-    public void DeleteChild(String id) {
+    public void DeleteChild(string id) {
         children.RemoveAll(child => child.id == id);
     }
 

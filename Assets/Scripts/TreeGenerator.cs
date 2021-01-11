@@ -165,7 +165,7 @@ public class TreeGenerator : MonoBehaviour {
         }
     }
 
-    void ButtonActions(String button, Branch parent) {
+    void ButtonActions(string button, Branch parent) {
         if (button == "newButton") {
             if (parent.GetChildren().Count < 10 && numLevels < 10) {
                 NewBranch(parent);
