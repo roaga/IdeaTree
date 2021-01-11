@@ -39,8 +39,7 @@ public class TerrainGenerator : MonoBehaviour {
             bool validPos = true;
             float x1 = hit.point.x;
             float z1 = hit.point.z;
-            for (int i = 0; i < Manager.trees.Count; i++) {
-                GameObject tree = Manager.trees[i];
+            foreach (var tree in Manager.trees.Values) {
                 Vector3 basePosition = tree.GetComponent<TreeGenerator>().basePosition;
                 float x2 = basePosition.x;
                 float z2 = basePosition.z;
@@ -54,7 +53,7 @@ public class TerrainGenerator : MonoBehaviour {
             if (validPos) {
                 GameObject tree = Instantiate(treePrefab, hit.point, Quaternion.identity);
                 DateTime date = DateTime.Now;
-                int id = Guid.NewGuid().ToString("N");
+                string id = Guid.NewGuid().ToString("N");
                 tree.GetComponent<TreeGenerator>().SpawnTree(hit.point, date, id);
                 Manager.trees.Add(id, tree);
             }
