@@ -11,12 +11,14 @@ public class Branch {
     Vector3 bottom;
     Vector3 rotation;
     GameObject buttonArray;
+    public String id;
 
     public Branch(string text, Branch parent, List<Branch> children, int levelNum) {
         this.text = text;
         this.parent = parent;
         this.children = children == null ? new List<Branch>() : children;
         this.levelNum = levelNum;
+        id = Guid.NewGuid().ToString("N");
 
     }
 
@@ -38,6 +40,10 @@ public class Branch {
 
     public List<Branch> GetChildren() {
         return children;
+    }
+
+    public void DeleteChild(String id) {
+        children.RemoveAll(child => child.id == id);
     }
 
     public int GetLevelNum() {

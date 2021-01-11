@@ -17,9 +17,10 @@ public class TreeGenerator : MonoBehaviour {
     public Vector3 basePosition;
     public DateTime dateCreated;
     int numLevels = 0;
+    int numBranches = 0;
     float heightFactor;
     float thicknessFactor;
-    List<Branch> branches;
+    Branch rootBranch;
 
     public void SpawnTree(Vector3 basePos, DateTime date) {
         basePosition = basePos;
@@ -27,10 +28,9 @@ public class TreeGenerator : MonoBehaviour {
         mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
 
-        Branch rootBranch = new Branch("", null, null, 1);
-        branches = new List<Branch>();
-        branches.Add(rootBranch);
+        rootBranch = new Branch("", null, null, 1);
         numLevels = 1;
+        numBranches = 1;
         UpdateThicknessAndHeight();
 
         // calculate base vertices
@@ -70,7 +70,7 @@ public class TreeGenerator : MonoBehaviour {
 
         // calculate branch
         CalculateBranch(rotation, basePos, newBranch.GetLevelNum(), newBranch);
-
+        numBranches++;
         UpdateMesh();
     }
 
@@ -93,7 +93,7 @@ public class TreeGenerator : MonoBehaviour {
         }
 
         // Calculate triangles using previous vertices as base; there should be 2 * NUM_VERTICES_IN_SHAPE = 12 triangles
-        for (int vertex = (branches.Count - 1) * 2 * NUM_VERTICES_IN_SHAPE; vertex < (branches.Count - 1) * 2 * NUM_VERTICES_IN_SHAPE + NUM_VERTICES_IN_SHAPE; vertex++) {
+        for (int vertex = (numBranches - 1) * 2 * NUM_VERTICES_IN_SHAPE; vertex < (numBranches - 1) * 2 * NUM_VERTICES_IN_SHAPE + NUM_VERTICES_IN_SHAPE; vertex++) {
             triangles.Add(vertex + NUM_VERTICES_IN_SHAPE);
             if ((vertex + 1) % NUM_VERTICES_IN_SHAPE == 0) {
                 triangles.Add(vertex + 1 - NUM_VERTICES_IN_SHAPE);
@@ -154,7 +154,7 @@ public class TreeGenerator : MonoBehaviour {
         } else {
             thicknessFactor = 0.1f;
         }
-        heightFactor = 0.5f + 0.5f * branches.Count;
+        heightFactor = 0.5f + 0.5f * numBranches;
 
         if (vertices != null) {
             for (int i = 0; i < vertices.Count - 6; i++) {
@@ -183,13 +183,20 @@ public class TreeGenerator : MonoBehaviour {
                 Manager.editorOpen = false;
             }
         } else if (button == "deleteButton") {
-            // TODO
+            if (parent.id == rootBranch.id) {
+                Manager.trees.RemoveAll(tree => tree.dateCreated == dateCreated);
+                Destroy(gameObject);
+            } else {
+                Branch grandparent = parent.GetParent();
+                grandparent.DeleteChild(parent.id);
+                UpdateMesh();
+            }
         }
     }
 
     void GenerateLeaves() {
         for (int i = vertices.Count - NUM_VERTICES_IN_SHAPE; i < vertices.Count; i += NUM_VERTICES_IN_SHAPE) {
-            for (int j = 0; j < NUM_VERTICES_IN_SHAPE; j += (NUM_VERTICES_IN_SHAPE / branches.Count / 2)) {
+            for (int j = 0; j < NUM_VERTICES_IN_SHAPE; j += (NUM_VERTICES_IN_SHAPE / numBranches / 2)) {
                 Instantiate(leaves, (vertices[i + j] + vertices[i + j - 6]) / 1.1f + basePosition, UnityEngine.Random.rotation);
                 Instantiate(leaves, (vertices[i + j] + vertices[i + j - 6]) / 1.3f + basePosition, UnityEngine.Random.rotation);
                 Instantiate(leaves, (vertices[i + j] + vertices[i + j - 6]) / 1.7f + basePosition, UnityEngine.Random.rotation);
