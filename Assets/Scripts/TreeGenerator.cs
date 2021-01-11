@@ -13,6 +13,7 @@ public class TreeGenerator : MonoBehaviour {
     List<Vector3> vertices;
     List<int> triangles;
     const int NUM_VERTICES_IN_SHAPE = 6;
+    string id;
 
     public Vector3 basePosition;
     public DateTime dateCreated;
@@ -22,11 +23,12 @@ public class TreeGenerator : MonoBehaviour {
     float thicknessFactor;
     Branch rootBranch;
 
-    public void SpawnTree(Vector3 basePos, DateTime date) {
+    public void SpawnTree(Vector3 basePos, DateTime date, string id) {
         basePosition = basePos;
         dateCreated = date;
         mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
+        this.id = id;
 
         rootBranch = new Branch("", null, null, 1);
         numLevels = 1;
@@ -125,28 +127,6 @@ public class TreeGenerator : MonoBehaviour {
         editButton.onClick.AddListener(() => ButtonActions("editButton", branch));
         deleteButton.onClick.AddListener(() => ButtonActions("deleteButton", branch));
     }
-    
-    void UpdateMesh() {
-        UpdateThicknessAndHeight();
-        GenerateLeaves();
-
-        mesh.Clear();
-        mesh.vertices = vertices.ToArray();
-        mesh.triangles = triangles.ToArray();
-        mesh.RecalculateBounds();
-        mesh.RecalculateNormals();
-
-        GetComponent<MeshCollider>().sharedMesh = mesh;
-    }
-
-    void ReloadMesh() {
-        // load save data and set mesh and triangles, branches
-
-    }
-
-    void SaveData() { 
-        // save mesh and triangles, branches data
-    }
 
     void UpdateThicknessAndHeight() {
         if (thicknessFactor < 2) {
@@ -184,11 +164,12 @@ public class TreeGenerator : MonoBehaviour {
             }
         } else if (button == "deleteButton") {
             if (parent.id == rootBranch.id) {
-                Manager.trees.RemoveAll(tree => tree.dateCreated == dateCreated);
+                Manager.trees.Remove(id); //TODO: successfully delete and destroy tree
                 Destroy(gameObject);
             } else {
                 Branch grandparent = parent.GetParent();
                 grandparent.DeleteChild(parent.id);
+                numBranches--;
                 UpdateMesh();
             }
         }
@@ -211,5 +192,27 @@ public class TreeGenerator : MonoBehaviour {
         if (Physics.Raycast(ray, out hit, 100f) && hit.collider.gameObject.name.Contains("TreePrefab") && !Manager.editorOpen) {
             Manager.editorOpen = true;
         }   
+    }
+
+    void UpdateMesh() {
+        UpdateThicknessAndHeight();
+        GenerateLeaves();
+
+        mesh.Clear();
+        mesh.vertices = vertices.ToArray();
+        mesh.triangles = triangles.ToArray();
+        mesh.RecalculateBounds();
+        mesh.RecalculateNormals();
+
+        GetComponent<MeshCollider>().sharedMesh = mesh;
+    }
+
+    void ReloadMesh() {
+        // load save data and set mesh and triangles, branches
+
+    }
+
+    void SaveData() { 
+        // save mesh and triangles, branches data
     }
 }

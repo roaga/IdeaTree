@@ -54,8 +54,9 @@ public class TerrainGenerator : MonoBehaviour {
             if (validPos) {
                 GameObject tree = Instantiate(treePrefab, hit.point, Quaternion.identity);
                 DateTime date = DateTime.Now;
-                tree.GetComponent<TreeGenerator>().SpawnTree(hit.point, date);
-                Manager.trees.Add(tree);
+                int id = Guid.NewGuid().ToString("N");
+                tree.GetComponent<TreeGenerator>().SpawnTree(hit.point, date, id);
+                Manager.trees.Add(id, tree);
             }
         } else if (Physics.Raycast(ray, out hit, 100f) && hit.collider.gameObject.name == "Terrain" && Manager.editorOpen) {
             Manager.editorOpen = false;
