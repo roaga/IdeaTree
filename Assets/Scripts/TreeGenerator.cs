@@ -119,7 +119,7 @@ public class TreeGenerator : MonoBehaviour {
         dir = Quaternion.Euler(rotation) * dir;
         buttonPos = dir + rootPos;
     
-        GameObject buttons = GameObject.Instantiate(branchButtons, basePosition + buttonPos, Quaternion.identity) as GameObject;
+        GameObject buttons = GameObject.Instantiate(branchButtons, basePosition + buttonPos, Quaternion.identity, gameObject.transform) as GameObject;
         Button newButton = buttons.transform.Find("Canvas").Find("NewBranchButton").gameObject.GetComponent<Button>();
         Button editButton = buttons.transform.Find("Canvas").Find("EditBranchButton").gameObject.GetComponent<Button>();
         Button deleteButton = buttons.transform.Find("Canvas").Find("DeleteBranchButton").gameObject.GetComponent<Button>();
@@ -164,18 +164,19 @@ public class TreeGenerator : MonoBehaviour {
             }
         } else if (button == "deleteButton") {
             if (parent.id == rootBranch.id) {
-                Manager.trees.Remove(id); //TODO: successfully delete and destroy tree
+                Manager.trees.Remove(id);
                 Destroy(gameObject);
             } else {
                 Branch grandparent = parent.GetParent();
                 grandparent.DeleteChild(parent.id);
                 numBranches--;
                 UpdateMesh();
+                //TODO: Delete vertices and triangles, leaves
             }
         }
     }
 
-    void GenerateLeaves() {
+    void GenerateLeaves() { // TODO: tie leaf generation to each branch and presence of note
         for (int i = vertices.Count - NUM_VERTICES_IN_SHAPE; i < vertices.Count; i += NUM_VERTICES_IN_SHAPE) {
             for (int j = 0; j < NUM_VERTICES_IN_SHAPE; j += (NUM_VERTICES_IN_SHAPE / numBranches / 2)) {
                 Instantiate(leaves, (vertices[i + j] + vertices[i + j - 6]) / 1.1f + basePosition, UnityEngine.Random.rotation);

@@ -27,5 +27,9 @@ public class Editor : MonoBehaviour
         v.x = v.z = 0.0f;
         transform.LookAt( cameraToLookAt.transform.position - v ); 
         transform.rotation = cameraToLookAt.transform.rotation;
+
+        if (Input.GetKey(KeyCode.Escape)) { // TODO: show esc prompt
+            Manager.editorOpen = false;
+        }
     }
 }

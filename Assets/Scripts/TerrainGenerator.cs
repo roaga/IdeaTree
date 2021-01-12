@@ -57,9 +57,8 @@ public class TerrainGenerator : MonoBehaviour {
                 tree.GetComponent<TreeGenerator>().SpawnTree(hit.point, date, id);
                 Manager.trees.Add(id, tree);
             }
-        } else if (Physics.Raycast(ray, out hit, 100f) && hit.collider.gameObject.name == "Terrain" && Manager.editorOpen) {
-            Manager.editorOpen = false;
-        }
+        // } else if (Physics.Raycast(ray, out hit, 100f) && hit.collider.gameObject.name == "Terrain" && Manager.editorOpen) {
+        } 
     }
 
     void CreateShape() {
