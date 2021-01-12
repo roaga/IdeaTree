@@ -166,6 +166,7 @@ public class TreeGenerator : MonoBehaviour {
             if (parent.id == rootBranch.id) {
                 Manager.trees.Remove(id);
                 Destroy(gameObject);
+                Manager.editorOpen = false;
             } else {
                 Branch grandparent = parent.GetParent();
                 grandparent.DeleteChild(parent.id);
