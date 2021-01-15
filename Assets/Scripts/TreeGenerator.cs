@@ -12,7 +12,7 @@ public class TreeGenerator : MonoBehaviour {
     Mesh mesh;
     List<Vector3> vertices;
     List<int> triangles;
-    const int NUM_VERTICES_IN_SHAPE = 6;
+    const int NUM_VERTICES_IN_SHAPE = Manager.NUM_VERTICES_IN_SHAPE;
     string id;
 
     public Vector3 basePosition;
@@ -73,7 +73,21 @@ public class TreeGenerator : MonoBehaviour {
         // calculate branch
         CalculateBranch(rotation, basePos, newBranch.GetLevelNum(), newBranch);
         numBranches++;
-        UpdateMesh();
+        ReloadMesh();
+
+        // instantiate branch buttons
+        Vector3 buttonPos = new Vector3(0, 0.4f * heightFactor / (levelNum * 0.5f), 0);
+        dir = buttonPos - rootPos;
+        dir = Quaternion.Euler(rotation) * dir;
+        buttonPos = dir + rootPos;
+    
+        GameObject buttons = GameObject.Instantiate(branchButtons, basePosition + buttonPos, Quaternion.identity, gameObject.transform) as GameObject;
+        Button newButton = buttons.transform.Find("Canvas").Find("NewBranchButton").gameObject.GetComponent<Button>();
+        Button editButton = buttons.transform.Find("Canvas").Find("EditBranchButton").gameObject.GetComponent<Button>();
+        Button deleteButton = buttons.transform.Find("Canvas").Find("DeleteBranchButton").gameObject.GetComponent<Button>();
+        newButton.onClick.AddListener(() => ButtonActions("newButton", newBranch));
+        editButton.onClick.AddListener(() => ButtonActions("editButton", newBranch));
+        deleteButton.onClick.AddListener(() => ButtonActions("deleteButton", newBranch));
     }
 
     void CalculateBranch(Vector3 rotation, Vector3 rootPos, int levelNum, Branch branch) {
@@ -87,45 +101,18 @@ public class TreeGenerator : MonoBehaviour {
         branch.SetBase(rootPos);
         branch.SetRotation(rotation);
 
+        List<Vector3> branchVert = new List<Vector3>();
+        // add base vertices
+        for (int i = vertices.Count - NUM_VERTICES_IN_SHAPE; i < vertices.Count; i++) {
+            branchVert.Add(vertices[i]);
+        }
         // calculate top vertices
         int thickness = (int) (thicknessFactor * numLevels * 0.5f) / levelNum;
         for (double angle = 0.0; angle < 360.0; angle += (360.0 / NUM_VERTICES_IN_SHAPE)) {
             double radAngle = angle * Math.PI / 180;
-            vertices.Add(new Vector3(topCenter.x + thickness * (float) Math.Cos(radAngle), topCenter.y, topCenter.z + thickness * (float) Math.Sin(radAngle)));
+            branchVert.Add(new Vector3(topCenter.x + thickness * (float) Math.Cos(radAngle), topCenter.y, topCenter.z + thickness * (float) Math.Sin(radAngle)));
         }
-
-        // Calculate triangles using previous vertices as base; there should be 2 * NUM_VERTICES_IN_SHAPE = 12 triangles
-        for (int vertex = (numBranches - 1) * 2 * NUM_VERTICES_IN_SHAPE; vertex < (numBranches - 1) * 2 * NUM_VERTICES_IN_SHAPE + NUM_VERTICES_IN_SHAPE; vertex++) {
-            triangles.Add(vertex + NUM_VERTICES_IN_SHAPE);
-            if ((vertex + 1) % NUM_VERTICES_IN_SHAPE == 0) {
-                triangles.Add(vertex + 1 - NUM_VERTICES_IN_SHAPE);
-            } else {
-                triangles.Add(vertex + 1);
-            }
-            triangles.Add(vertex);
-
-            triangles.Add(vertex + NUM_VERTICES_IN_SHAPE);
-            if ((vertex + 1 + NUM_VERTICES_IN_SHAPE) % NUM_VERTICES_IN_SHAPE == 0) {
-                triangles.Add(vertex + 1);
-            } else {
-                triangles.Add(vertex + 1 + NUM_VERTICES_IN_SHAPE);
-            }
-            triangles.Add(vertex);
-        }
-
-        // instantiate buttons
-        Vector3 buttonPos = new Vector3(0, 0.4f * heightFactor / (levelNum * 0.5f), 0);
-        dir = buttonPos - rootPos;
-        dir = Quaternion.Euler(rotation) * dir;
-        buttonPos = dir + rootPos;
-    
-        GameObject buttons = GameObject.Instantiate(branchButtons, basePosition + buttonPos, Quaternion.identity, gameObject.transform) as GameObject;
-        Button newButton = buttons.transform.Find("Canvas").Find("NewBranchButton").gameObject.GetComponent<Button>();
-        Button editButton = buttons.transform.Find("Canvas").Find("EditBranchButton").gameObject.GetComponent<Button>();
-        Button deleteButton = buttons.transform.Find("Canvas").Find("DeleteBranchButton").gameObject.GetComponent<Button>();
-        newButton.onClick.AddListener(() => ButtonActions("newButton", branch));
-        editButton.onClick.AddListener(() => ButtonActions("editButton", branch));
-        deleteButton.onClick.AddListener(() => ButtonActions("deleteButton", branch));
+        branch.SetVertices(branchVert);
     }
 
     void UpdateThicknessAndHeight() {
@@ -135,14 +122,6 @@ public class TreeGenerator : MonoBehaviour {
             thicknessFactor = 0.1f;
         }
         heightFactor = 0.5f + 0.5f * numBranches;
-
-        if (vertices != null) {
-            for (int i = 0; i < vertices.Count - 6; i++) {
-                Vector3 vertex = vertices[i];
-                vertex = new Vector3(vertex.x, vertex.y * heightFactor, vertex.z);
-                vertices[i] = vertex;
-            }
-        }
     }
 
     void ButtonActions(string button, Branch parent) {
@@ -171,29 +150,9 @@ public class TreeGenerator : MonoBehaviour {
                 Branch grandparent = parent.GetParent();
                 grandparent.DeleteChild(parent.id);
                 numBranches--;
-                UpdateMesh();
-                //TODO: Delete vertices and triangles, leaves
+                ReloadMesh();
             }
         }
-    }
-
-    void GenerateLeaves() { // TODO: tie leaf generation to each branch and presence of note
-        for (int i = vertices.Count - NUM_VERTICES_IN_SHAPE; i < vertices.Count; i += NUM_VERTICES_IN_SHAPE) {
-            for (int j = 0; j < NUM_VERTICES_IN_SHAPE; j += (NUM_VERTICES_IN_SHAPE / numBranches / 2)) {
-                Instantiate(leaves, (vertices[i + j] + vertices[i + j - 6]) / 1.1f + basePosition, UnityEngine.Random.rotation);
-                Instantiate(leaves, (vertices[i + j] + vertices[i + j - 6]) / 1.3f + basePosition, UnityEngine.Random.rotation);
-                Instantiate(leaves, (vertices[i + j] + vertices[i + j - 6]) / 1.7f + basePosition, UnityEngine.Random.rotation);
-            }
-        }
-    }
-
-    void OnMouseDown() {
-        Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
-        RaycastHit hit;
-
-        if (Physics.Raycast(ray, out hit, 100f) && hit.collider.gameObject.name.Contains("TreePrefab") && !Manager.editorOpen) {
-            Manager.editorOpen = true;
-        }   
     }
 
     void UpdateMesh() {
@@ -210,11 +169,28 @@ public class TreeGenerator : MonoBehaviour {
     }
 
     void ReloadMesh() {
-        // load save data and set mesh and triangles, branches
+        // recalculate everything based on each branch; combine each branch's vertices and triangles
+        int block = 0;
+        foreach (Branch branch in branches) {
+            CalculateBranch(branch.GetRotation(), branch.GetBase(), branch.GetLevelNum(), branch);
+            List<Vector3> newVert = branch.GetVertices();
+            List<int> newTri = branch.GetTriangles();
+            for (int i = block; i < block + NUM_VERTICES_IN_SHAPE; i++) {
+                vertices[i] = newVert[i - block];
+                triangles[i] = newTri[i - block] + block;
+            }
+            block += NUM_VERTICES_IN_SHAPE;
+        }
 
+        UpdateMesh();
     }
 
-    void SaveData() { 
-        // save mesh and triangles, branches data
+    void OnMouseDown() {
+        Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, 100f) && hit.collider.gameObject.name.Contains("TreePrefab") && !Manager.editorOpen) {
+            Manager.editorOpen = true;
+        }   
     }
 }
