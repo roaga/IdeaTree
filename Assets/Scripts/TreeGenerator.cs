@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class TreeGenerator : MonoBehaviour {
 
     public GameObject branchButtons;
+    public GameObject leafPrefab;
 
     Mesh mesh;
     List<Vector3> vertices;
@@ -29,7 +30,7 @@ public class TreeGenerator : MonoBehaviour {
         GetComponent<MeshFilter>().mesh = mesh;
         this.id = id;
 
-        rootBranch = new Branch("", null, null, 1, null, basePosition);
+        rootBranch = new Branch("", null, null, 1, null, basePosition, leafPrefab);
         numLevels = 1;
         numBranches = 1;
         UpdateThicknessAndHeight();
@@ -48,7 +49,7 @@ public class TreeGenerator : MonoBehaviour {
     }
 
     void NewBranch(Branch parent) {
-        Branch newBranch = new Branch("", parent, null, parent.GetLevelNum() + 1, null, basePosition);
+        Branch newBranch = new Branch("", parent, null, parent.GetLevelNum() + 1, null, basePosition, leafPrefab);
         parent.AddChild(newBranch);
 
         Vector3 basePos = parent.GetTop();
@@ -169,7 +170,7 @@ public class TreeGenerator : MonoBehaviour {
     void ReloadMesh() {
         // recalculate everything based on each branch; combine each branch's vertices and triangles
         int block = 0;
-        foreach (Branch branch in branches) {
+        foreach (Branch branch in branches) { // TODO: Fix iteration (level order)
             CalculateBranch(branch.GetRotation(), branch.GetBase(), branch.GetLevelNum(), branch);
             List<Vector3> newVert = branch.GetVertices();
             List<int> newTri = branch.GetTriangles();

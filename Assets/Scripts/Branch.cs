@@ -1,12 +1,12 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System;
 
-public class Branch : MonoBehaviour {
+public class Branch {
     const int NUM_VERTICES_IN_SHAPE = Manager.NUM_VERTICES_IN_SHAPE;
 
-    public GameObject leafPrefab;
+    GameObject leafPrefab;
 
     string text;
     Branch parent;
@@ -24,7 +24,7 @@ public class Branch : MonoBehaviour {
 
     List<GameObject> leaves;
 
-    public Branch(string text, Branch parent, List<Branch> children, int levelNum, List<Vector3> initVert, Vector3 basePos) {
+    public Branch(string text, Branch parent, List<Branch> children, int levelNum, List<Vector3> initVert, Vector3 basePos, GameObject leafObject) {
         this.text = text;
         this.parent = parent;
         this.children = children == null ? new List<Branch>() : children;
@@ -38,6 +38,7 @@ public class Branch : MonoBehaviour {
         triangles = new List<int>();
         leaves = new List<GameObject>();
         treeBase = basePos;
+        leafPrefab = leafObject;
 
         GenerateLeaves();
     }
