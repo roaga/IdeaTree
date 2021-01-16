@@ -3,8 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
-public class Branch {
+public class Branch : MonoBehaviour {
     const int NUM_VERTICES_IN_SHAPE = Manager.NUM_VERTICES_IN_SHAPE;
+
+    public GameObject leafPrefab;
 
     string text;
     Branch parent;
@@ -15,20 +17,27 @@ public class Branch {
     Vector3 rotation;
     GameObject buttonArray;
     public string id;
+    Vector3 treeBase;
 
     List<Vector3> vertices;
     List<int> triangles;
 
     List<GameObject> leaves;
 
-    public Branch(string text, Branch parent, List<Branch> children, int levelNum, List<Vector3> initVert) {
+    public Branch(string text, Branch parent, List<Branch> children, int levelNum, List<Vector3> initVert, Vector3 basePos) {
         this.text = text;
         this.parent = parent;
         this.children = children == null ? new List<Branch>() : children;
         this.levelNum = levelNum;
         id = Guid.NewGuid().ToString("N");
-        vertices = initVert;
+        if (initVert == null) {
+            vertices = new List<Vector3>();
+        } else {
+            vertices = initVert;
+        }
+        triangles = new List<int>();
         leaves = new List<GameObject>();
+        treeBase = basePos;
 
         GenerateLeaves();
     }
@@ -140,9 +149,9 @@ public class Branch {
 
     void GenerateLeaves() { 
         for (int j = 0; j < NUM_VERTICES_IN_SHAPE; j++) {
-            GameObject leavesHigh = GameObject.Instantiate(leaves, (vertices[j] + vertices[j + NUM_VERTICES_IN_SHAPE]) / 1.1f + basePosition, UnityEngine.Random.rotation);
-            GameObject leavesMed = GameObject.Instantiate(leaves, (vertices[j] + vertices[j + NUM_VERTICES_IN_SHAPE]) / 1.3f + basePosition, UnityEngine.Random.rotation);
-            GameObject leavesLow = GameObject.Instantiate(leaves, (vertices[j] + vertices[j + NUM_VERTICES_IN_SHAPE]) / 1.7f + basePosition, UnityEngine.Random.rotation);
+            GameObject leavesHigh = GameObject.Instantiate(leafPrefab, (vertices[j] + vertices[j + NUM_VERTICES_IN_SHAPE]) / 1.1f + treeBase, UnityEngine.Random.rotation);
+            GameObject leavesMed = GameObject.Instantiate(leafPrefab, (vertices[j] + vertices[j + NUM_VERTICES_IN_SHAPE]) / 1.3f + treeBase, UnityEngine.Random.rotation);
+            GameObject leavesLow = GameObject.Instantiate(leafPrefab, (vertices[j] + vertices[j + NUM_VERTICES_IN_SHAPE]) / 1.7f + treeBase, UnityEngine.Random.rotation);
             
             leavesHigh.SetActive(false);
             leavesMed.SetActive(false);

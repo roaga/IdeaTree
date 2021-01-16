@@ -6,7 +6,6 @@ using UnityEngine.UI;
 
 public class TreeGenerator : MonoBehaviour {
 
-    public GameObject leaves;
     public GameObject branchButtons;
 
     Mesh mesh;
@@ -30,7 +29,7 @@ public class TreeGenerator : MonoBehaviour {
         GetComponent<MeshFilter>().mesh = mesh;
         this.id = id;
 
-        rootBranch = new Branch("", null, null, 1);
+        rootBranch = new Branch("", null, null, 1, null, basePosition);
         numLevels = 1;
         numBranches = 1;
         UpdateThicknessAndHeight();
@@ -49,7 +48,7 @@ public class TreeGenerator : MonoBehaviour {
     }
 
     void NewBranch(Branch parent) {
-        Branch newBranch = new Branch("", parent, null, parent.GetLevelNum() + 1);
+        Branch newBranch = new Branch("", parent, null, parent.GetLevelNum() + 1, null, basePosition);
         parent.AddChild(newBranch);
 
         Vector3 basePos = parent.GetTop();
@@ -76,10 +75,10 @@ public class TreeGenerator : MonoBehaviour {
         ReloadMesh();
 
         // instantiate branch buttons
-        Vector3 buttonPos = new Vector3(0, 0.4f * heightFactor / (levelNum * 0.5f), 0);
-        dir = buttonPos - rootPos;
+        Vector3 buttonPos = new Vector3(0, 0.4f * heightFactor / (newBranch.GetLevelNum() * 0.5f), 0);
+        Vector3 dir = buttonPos - newBranch.GetBase();
         dir = Quaternion.Euler(rotation) * dir;
-        buttonPos = dir + rootPos;
+        buttonPos = dir + newBranch.GetBase();
     
         GameObject buttons = GameObject.Instantiate(branchButtons, basePosition + buttonPos, Quaternion.identity, gameObject.transform) as GameObject;
         Button newButton = buttons.transform.Find("Canvas").Find("NewBranchButton").gameObject.GetComponent<Button>();
@@ -157,7 +156,6 @@ public class TreeGenerator : MonoBehaviour {
 
     void UpdateMesh() {
         UpdateThicknessAndHeight();
-        GenerateLeaves();
 
         mesh.Clear();
         mesh.vertices = vertices.ToArray();
