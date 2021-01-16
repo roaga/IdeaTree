@@ -28,7 +28,7 @@ public class Branch {
         this.levelNum = levelNum;
         id = Guid.NewGuid().ToString("N");
         vertices = initVert;
-        leaves = new List<GameObject>;
+        leaves = new List<GameObject>();
 
         GenerateLeaves();
     }
