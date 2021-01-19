@@ -170,15 +170,25 @@ public class TreeGenerator : MonoBehaviour {
     void ReloadMesh() {
         // recalculate everything based on each branch; combine each branch's vertices and triangles
         int block = 0;
-        foreach (Branch branch in branches) { // TODO: Fix iteration (level order)
-            CalculateBranch(branch.GetRotation(), branch.GetBase(), branch.GetLevelNum(), branch);
-            List<Vector3> newVert = branch.GetVertices();
-            List<int> newTri = branch.GetTriangles();
-            for (int i = block; i < block + NUM_VERTICES_IN_SHAPE; i++) {
-                vertices[i] = newVert[i - block];
-                triangles[i] = newTri[i - block] + block;
+
+        Queue<Branch> branches = new Queue<Branch>();
+        branches.Enqueue(rootBranch);
+        while (branches.Count > 0) {
+            Branch curr = branches.Dequeue();
+            if (curr != null) {
+                List<Branch> children = curr.GetChildren();
+                foreach (Branch child in children) {
+                    branches.Enqueue(child);
+                    CalculateBranch(curr.GetRotation(), curr.GetBase(), curr.GetLevelNum(), curr);
+                    List<Vector3> newVert = curr.GetVertices();
+                    List<int> newTri = curr.GetTriangles();
+                    for (int i = block; i < block + NUM_VERTICES_IN_SHAPE; i++) {
+                        vertices[i] = newVert[i - block];
+                        triangles[i] = newTri[i - block] + block;
+                    }
+                    block += NUM_VERTICES_IN_SHAPE;
+                }
             }
-            block += NUM_VERTICES_IN_SHAPE;
         }
 
         UpdateMesh();
