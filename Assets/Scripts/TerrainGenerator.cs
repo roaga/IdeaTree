@@ -78,7 +78,7 @@ public class TerrainGenerator : MonoBehaviour {
                 vertices[i] = new Vector3(x, y, z);
 
                 // grass spawn
-                if (y < 2.5 && random.Next(0, 10) < 7) { // avoid hills
+                if (y < 2.5 && x > 0.5 && x < 19.5 && z > 0.5 && z < 19.5 && random.Next(0, 10) < 8) { // avoid hills
                     Instantiate(grassPatch, new Vector3(x, y, z), Quaternion.identity);
                     Instantiate(grassPatch, new Vector3(Math.Abs(x - 0.2f), y, Math.Abs(z - 0.2f)), Quaternion.identity);
                     Instantiate(grassPatch, new Vector3(Math.Abs(x + 0.2f), y, Math.Abs(z + 0.2f)), Quaternion.identity);
