@@ -78,15 +78,15 @@ public class TerrainGenerator : MonoBehaviour {
                 vertices[i] = new Vector3(x, y, z);
 
                 // grass spawn
-                if (y < 2.5 && x > 0.5 && x < 19.5 && z > 0.5 && z < 19.5 && random.Next(0, 10) < 8) { // avoid hills
+                if (y < 2.5 && x > 1 && x < 19 && z > 1 && z < 19 && random.Next(0, 10) < 8) { // avoid hills
                     Instantiate(grassPatch, new Vector3(x, y, z), Quaternion.identity);
-                    Instantiate(grassPatch, new Vector3(Math.Abs(x - 0.2f), y, Math.Abs(z - 0.2f)), Quaternion.identity);
-                    Instantiate(grassPatch, new Vector3(Math.Abs(x + 0.2f), y, Math.Abs(z + 0.2f)), Quaternion.identity);
-                    Instantiate(grassPatch, new Vector3(Math.Abs(x - 0.2f), y, Math.Abs(z + 0.2f)), Quaternion.identity);
-                    Instantiate(grassPatch, new Vector3(Math.Abs(x + 0.2f), y, Math.Abs(z - 0.2f)), Quaternion.identity);
+                    // Instantiate(grassPatch, new Vector3(Math.Abs(x - 0.2f), y, Math.Abs(z - 0.2f)), Quaternion.identity);
+                    // Instantiate(grassPatch, new Vector3(Math.Abs(x + 0.2f), y, Math.Abs(z + 0.2f)), Quaternion.identity);
+                    // Instantiate(grassPatch, new Vector3(Math.Abs(x - 0.2f), y, Math.Abs(z + 0.2f)), Quaternion.identity);
+                    // Instantiate(grassPatch, new Vector3(Math.Abs(x + 0.2f), y, Math.Abs(z - 0.2f)), Quaternion.identity);
                 }
                 // random terrain accessory spawn
-                if (random.Next(0, 10) < 1) {
+                if (random.Next(0, 10) < 1 && x > 0 && x < 20 && z > 0 && z < 20) {
                     int num = random.Next(0, accessories.Length);
                     Instantiate(accessories[num], new Vector3(x, y, z), Quaternion.Euler(new Vector3(0, random.Next(0, 359), 0)));
                 }
