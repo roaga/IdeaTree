@@ -41,6 +41,9 @@ public class TreeGenerator : MonoBehaviour {
         for (double angle = 0.0; angle < 360.0; angle += (360.0 / NUM_VERTICES_IN_SHAPE)) {
             double radAngle = angle * Math.PI / 180;
             vertices.Add(new Vector3(thicknessFactor * (float) Math.Cos(radAngle), 0, thicknessFactor * (float) Math.Sin(radAngle)));
+            triangles.Add(0);
+            triangles.Add(0);
+            triangles.Add(0);
         }
 
         CalculateBranch(new Vector3(0, 0, 0), basePos, rootBranch.GetLevelNum(), rootBranch);
@@ -112,7 +115,6 @@ public class TreeGenerator : MonoBehaviour {
             double radAngle = angle * Math.PI / 180;
             branchVert.Add(new Vector3(topCenter.x + thickness * (float) Math.Cos(radAngle), topCenter.y, topCenter.z + thickness * (float) Math.Sin(radAngle)));
         }
-        Debug.Log("branchVert count: " + branchVert.Count);
         branch.SetVertices(branchVert);
     }
 
@@ -172,7 +174,15 @@ public class TreeGenerator : MonoBehaviour {
         // recalculate everything based on each branch; combine each branch's vertices and triangles
         int block = 0;
 
-        Queue<Branch> branches = new Queue<Branch>();
+        // redo base
+        int index = 0;
+        for (double angle = 0.0; angle < 360.0; angle += (360.0 / NUM_VERTICES_IN_SHAPE)) {
+            double radAngle = angle * Math.PI / 180;
+            vertices[index] = new Vector3(thicknessFactor * (float) Math.Cos(radAngle), 0, thicknessFactor * (float) Math.Sin(radAngle));
+            index++;
+        }
+
+        Queue<Branch> branches = new Queue<Branch>(); // level order traversal
         branches.Enqueue(rootBranch);
         while (branches.Count > 0) {
             Branch curr = branches.Dequeue();
@@ -180,15 +190,36 @@ public class TreeGenerator : MonoBehaviour {
                 List<Branch> children = curr.GetChildren();
                 foreach (Branch child in children) {
                     branches.Enqueue(child);
-                    CalculateBranch(curr.GetRotation(), curr.GetBase(), curr.GetLevelNum(), curr);
-                    List<Vector3> newVert = curr.GetVertices();
-                    List<int> newTri = curr.GetTriangles();
-                    for (int i = block; i < block + NUM_VERTICES_IN_SHAPE; i++) {
-                        vertices[i] = newVert[i - block];
-                        triangles[i] = newTri[i - block] + block;
-                    }
-                    block += NUM_VERTICES_IN_SHAPE;
                 }
+                CalculateBranch(curr.GetRotation(), curr.GetBase(), curr.GetLevelNum(), curr);
+                List<Vector3> newVert = curr.GetVertices();
+                List<int> newTri = curr.GetTriangles();
+
+                for (int i = block; i < block + 2 * NUM_VERTICES_IN_SHAPE; i++) {
+                    if (i >= vertices.Count) {
+                        vertices.Add(newVert[i - block]);
+                    } else {
+                        vertices[i] = newVert[i - block];
+                    }
+                }
+                for (int i = block; i < block + NUM_VERTICES_IN_SHAPE * NUM_VERTICES_IN_SHAPE; i += 6) {
+                    if (i >= triangles.Count) {
+                        triangles.Add(newTri[i - block] + block);
+                        triangles.Add(newTri[i - block + 1] + block);
+                        triangles.Add(newTri[i - block + 2] + block);
+                        triangles.Add(newTri[i - block + 3] + block);
+                        triangles.Add(newTri[i - block + 4] + block);
+                        triangles.Add(newTri[i - block + 5] + block);
+                    } else {
+                        triangles[i] = newTri[i - block] + block;
+                        triangles[i + 1] = newTri[i - block + 1] + block;
+                        triangles[i + 2] = newTri[i - block + 2] + block;
+                        triangles[i + 3] = newTri[i - block + 3] + block;
+                        triangles[i + 4] = newTri[i - block + 4] + block;
+                        triangles[i + 5] = newTri[i - block + 5] + block;
+                    }
+                }
+                block += NUM_VERTICES_IN_SHAPE * 2;
             }
         }
 
