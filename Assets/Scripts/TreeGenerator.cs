@@ -45,7 +45,7 @@ public class TreeGenerator : MonoBehaviour {
 
         CalculateBranch(new Vector3(0, 0, 0), basePos, rootBranch.GetLevelNum(), rootBranch);
 
-        UpdateMesh();
+        ReloadMesh();
     }
 
     void NewBranch(Branch parent) {
@@ -112,6 +112,7 @@ public class TreeGenerator : MonoBehaviour {
             double radAngle = angle * Math.PI / 180;
             branchVert.Add(new Vector3(topCenter.x + thickness * (float) Math.Cos(radAngle), topCenter.y, topCenter.z + thickness * (float) Math.Sin(radAngle)));
         }
+        Debug.Log("branchVert count: " + branchVert.Count);
         branch.SetVertices(branchVert);
     }
 

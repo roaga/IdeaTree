@@ -150,6 +150,9 @@ public class Branch {
 
     void GenerateLeaves() { 
         for (int j = 0; j < NUM_VERTICES_IN_SHAPE; j++) {
+            Debug.Log("vertices count: " + vertices.Count);
+            Debug.Log("triangles count: " + triangles.Count);
+
             GameObject leavesHigh = GameObject.Instantiate(leafPrefab, (vertices[j] + vertices[j + NUM_VERTICES_IN_SHAPE]) / 1.1f + treeBase, UnityEngine.Random.rotation);
             GameObject leavesMed = GameObject.Instantiate(leafPrefab, (vertices[j] + vertices[j + NUM_VERTICES_IN_SHAPE]) / 1.3f + treeBase, UnityEngine.Random.rotation);
             GameObject leavesLow = GameObject.Instantiate(leafPrefab, (vertices[j] + vertices[j + NUM_VERTICES_IN_SHAPE]) / 1.7f + treeBase, UnityEngine.Random.rotation);
