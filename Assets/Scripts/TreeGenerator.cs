@@ -104,7 +104,7 @@ public class TreeGenerator : MonoBehaviour {
         branch.SetVertices(branchVert);
 
         // instantiate branch buttons
-        branch.DestroyButtons();
+        Destroy(branch.GetButtons());
         Vector3 buttonPos = new Vector3(0, 0.6f * heightFactor / (levelNum * 0.5f), 0);
         dir = buttonPos - rootPos;
         dir = Quaternion.Euler(rotation) * dir;

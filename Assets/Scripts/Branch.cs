@@ -162,14 +162,11 @@ public class Branch {
         }
     }
 
-    public void DestroyButtons() {
-        if (buttons != null) {
-            Destroy(buttons);
-            buttons = null;
-        }
-    }
-
     public void SetButtons(GameObject buttons) {
         this.buttons = buttons;
+    }
+
+    public void GetButtons() {
+        return buttons;
     }
 }
