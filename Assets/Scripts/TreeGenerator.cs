@@ -30,7 +30,7 @@ public class TreeGenerator : MonoBehaviour {
         GetComponent<MeshFilter>().mesh = mesh;
         this.id = id;
 
-        rootBranch = new Branch("", null, null, 1, null, basePosition, leafPrefab);
+        rootBranch = new Branch("", null, null, 1, null, basePosition, leafPrefab, null);
         numLevels = 1;
         numBranches = 1;
         UpdateThicknessAndHeight();
@@ -52,7 +52,7 @@ public class TreeGenerator : MonoBehaviour {
     }
 
     void NewBranch(Branch parent) {
-        Branch newBranch = new Branch("", parent, null, parent.GetLevelNum() + 1, null, basePosition, leafPrefab);
+        Branch newBranch = new Branch("", parent, null, parent.GetLevelNum() + 1, null, basePosition, leafPrefab, null);
         parent.AddChild(newBranch);
 
         Vector3 basePos = parent.GetTop();
