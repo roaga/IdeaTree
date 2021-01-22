@@ -92,9 +92,9 @@ public class TreeGenerator : MonoBehaviour {
 
         List<Vector3> branchVert = new List<Vector3>();
         // add base vertices
-        for (int i = vertices.Count - NUM_VERTICES_IN_SHAPE; i < vertices.Count; i++) {
-            branchVert.Add(vertices[i]);
-        }
+        // for (int i = vertices.Count - NUM_VERTICES_IN_SHAPE; i < vertices.Count; i++) {
+        //     branchVert.Add(vertices[i]);
+        // }
         // calculate top vertices
         int thickness = (int) (thicknessFactor * numLevels * 0.5f) / levelNum;
         for (double angle = 0.0; angle < 360.0; angle += (360.0 / NUM_VERTICES_IN_SHAPE)) {
@@ -174,7 +174,7 @@ public class TreeGenerator : MonoBehaviour {
 
     void ReloadMesh() {
         // recalculate everything based on each branch; combine each branch's vertices and triangles
-        int block = 0;
+        int block = 6;
 
         // redo base
         int index = 0;
@@ -197,7 +197,7 @@ public class TreeGenerator : MonoBehaviour {
                 List<Vector3> newVert = curr.GetVertices();
                 List<int> newTri = curr.GetTriangles();
 
-                for (int i = block; i < block + 2 * NUM_VERTICES_IN_SHAPE; i++) {
+                for (int i = block; i < block + NUM_VERTICES_IN_SHAPE; i++) { 
                     if (i >= vertices.Count) {
                         vertices.Add(newVert[i - block]);
                     } else {
