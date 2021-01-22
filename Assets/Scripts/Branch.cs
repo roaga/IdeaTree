@@ -166,7 +166,7 @@ public class Branch {
         this.buttons = buttons;
     }
 
-    public void GetButtons() {
+    public GameObject GetButtons() {
         return buttons;
     }
 }
