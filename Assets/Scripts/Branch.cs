@@ -23,22 +23,20 @@ public class Branch {
     List<int> triangles;
 
     List<GameObject> leaves;
+    GameObject buttons; 
 
-    public Branch(string text, Branch parent, List<Branch> children, int levelNum, List<Vector3> initVert, Vector3 basePos, GameObject leafObject) {
+    public Branch(string text, Branch parent, List<Branch> children, int levelNum, List<Vector3> initVert, Vector3 basePos, GameObject leafObject, GameObject buttons) {
         this.text = text;
         this.parent = parent;
         this.children = children == null ? new List<Branch>() : children;
         this.levelNum = levelNum;
         id = Guid.NewGuid().ToString("N");
-        if (initVert == null) {
-            vertices = new List<Vector3>();
-        } else {
-            vertices = initVert;
-        }
+        vertices = initVert == null ? new List<Vector3>() : initVert;
         triangles = new List<int>();
         leaves = new List<GameObject>();
         treeBase = basePos;
         leafPrefab = leafObject;
+        this.buttons = buttons;
 
         CalculateTriangles();
     }
@@ -162,5 +160,16 @@ public class Branch {
             leaves.Add(leavesMed);
             leaves.Add(leavesLow);
         }
+    }
+
+    void DestroyButtons() {
+        if (buttons != null) {
+            Destroy(buttons);
+            buttons = null;
+        }
+    }
+
+    public void SetButtons(GameObject buttons) {
+        this.buttons = buttons;
     }
 }
