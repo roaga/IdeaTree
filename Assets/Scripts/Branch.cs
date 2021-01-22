@@ -39,6 +39,8 @@ public class Branch {
         leaves = new List<GameObject>();
         treeBase = basePos;
         leafPrefab = leafObject;
+
+        CalculateTriangles();
     }
 
     public void AddChild(Branch child) {
@@ -122,7 +124,6 @@ public class Branch {
 
     public void SetVertices(List<Vector3> newVert) {
         vertices = newVert;
-        CalculateTriangles();
         GenerateLeaves();
     }
 
