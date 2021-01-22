@@ -49,6 +49,20 @@ public class TreeGenerator : MonoBehaviour {
         CalculateBranch(new Vector3(0, 0, 0), basePos, rootBranch.GetLevelNum(), rootBranch);
 
         ReloadMesh();
+
+        // instantiate branch buttons
+        Vector3 buttonPos = new Vector3(0, 0.4f * heightFactor / (rootBranch.GetLevelNum() * 0.5f), 0);
+        Vector3 dir = buttonPos - basePos;
+        dir = Quaternion.Euler(rotation) * dir;
+        buttonPos = dir + basePos;
+    
+        GameObject buttons = GameObject.Instantiate(branchButtons, basePosition + buttonPos, Quaternion.identity, gameObject.transform) as GameObject;
+        Button newButton = buttons.transform.Find("Canvas").Find("NewBranchButton").gameObject.GetComponent<Button>();
+        Button editButton = buttons.transform.Find("Canvas").Find("EditBranchButton").gameObject.GetComponent<Button>();
+        Button deleteButton = buttons.transform.Find("Canvas").Find("DeleteBranchButton").gameObject.GetComponent<Button>();
+        newButton.onClick.AddListener(() => ButtonActions("newButton", rootBranch));
+        editButton.onClick.AddListener(() => ButtonActions("editButton", rootBranch));
+        deleteButton.onClick.AddListener(() => ButtonActions("deleteButton", rootBranch));
     }
 
     void NewBranch(Branch parent) {
@@ -77,6 +91,20 @@ public class TreeGenerator : MonoBehaviour {
         CalculateBranch(rotation, basePos, newBranch.GetLevelNum(), newBranch);
         numBranches++;
         ReloadMesh();
+
+        // instantiate branch buttons
+        Vector3 buttonPos = new Vector3(0, 0.4f * heightFactor / (newBranch.GetLevelNum() * 0.5f), 0);
+        Vector3 dir = buttonPos - basePos;
+        dir = Quaternion.Euler(rotation) * dir;
+        buttonPos = dir + basePos;
+    
+        GameObject buttons = GameObject.Instantiate(branchButtons, basePosition + buttonPos, Quaternion.identity, gameObject.transform) as GameObject;
+        Button newButton = buttons.transform.Find("Canvas").Find("NewBranchButton").gameObject.GetComponent<Button>();
+        Button editButton = buttons.transform.Find("Canvas").Find("EditBranchButton").gameObject.GetComponent<Button>();
+        Button deleteButton = buttons.transform.Find("Canvas").Find("DeleteBranchButton").gameObject.GetComponent<Button>();
+        newButton.onClick.AddListener(() => ButtonActions("newButton", newBranch));
+        editButton.onClick.AddListener(() => ButtonActions("editButton", newBranch));
+        deleteButton.onClick.AddListener(() => ButtonActions("deleteButton", newBranch));
     }
 
     void CalculateBranch(Vector3 rotation, Vector3 rootPos, int levelNum, Branch branch) {
@@ -102,20 +130,6 @@ public class TreeGenerator : MonoBehaviour {
             branchVert.Add(new Vector3(topCenter.x + thickness * (float) Math.Cos(radAngle), topCenter.y, topCenter.z + thickness * (float) Math.Sin(radAngle)));
         }
         branch.SetVertices(branchVert);
-
-        // instantiate branch buttons
-        Vector3 buttonPos = new Vector3(0, 0.4f * heightFactor / (levelNum * 0.5f), 0);
-        dir = buttonPos - rootPos;
-        dir = Quaternion.Euler(rotation) * dir;
-        buttonPos = dir + rootPos;
-    
-        GameObject buttons = GameObject.Instantiate(branchButtons, basePosition + buttonPos, Quaternion.identity, gameObject.transform) as GameObject;
-        Button newButton = buttons.transform.Find("Canvas").Find("NewBranchButton").gameObject.GetComponent<Button>();
-        Button editButton = buttons.transform.Find("Canvas").Find("EditBranchButton").gameObject.GetComponent<Button>();
-        Button deleteButton = buttons.transform.Find("Canvas").Find("DeleteBranchButton").gameObject.GetComponent<Button>();
-        newButton.onClick.AddListener(() => ButtonActions("newButton", branch));
-        editButton.onClick.AddListener(() => ButtonActions("editButton", branch));
-        deleteButton.onClick.AddListener(() => ButtonActions("deleteButton", branch));
     }
 
     void UpdateThicknessAndHeight() {
