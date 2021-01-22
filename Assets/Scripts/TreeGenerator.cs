@@ -53,7 +53,6 @@ public class TreeGenerator : MonoBehaviour {
         // instantiate branch buttons
         Vector3 buttonPos = new Vector3(0, 0.4f * heightFactor / (rootBranch.GetLevelNum() * 0.5f), 0);
         Vector3 dir = buttonPos - basePos;
-        dir = Quaternion.Euler(rotation) * dir;
         buttonPos = dir + basePos;
     
         GameObject buttons = GameObject.Instantiate(branchButtons, basePosition + buttonPos, Quaternion.identity, gameObject.transform) as GameObject;
