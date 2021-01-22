@@ -162,7 +162,7 @@ public class Branch {
         }
     }
 
-    void DestroyButtons() {
+    public void DestroyButtons() {
         if (buttons != null) {
             Destroy(buttons);
             buttons = null;
