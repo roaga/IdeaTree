@@ -106,9 +106,9 @@ public class TreeGenerator : MonoBehaviour {
         // instantiate branch buttons
         branch.DestroyButtons();
         Vector3 buttonPos = new Vector3(0, 0.6f * heightFactor / (levelNum * 0.5f), 0);
-        dir = buttonPos - basePos;
+        dir = buttonPos - rootPos;
         dir = Quaternion.Euler(rotation) * dir;
-        buttonPos = dir + basePos;
+        buttonPos = dir + rootPos;
     
         GameObject buttons = GameObject.Instantiate(branchButtons, basePosition + buttonPos, Quaternion.identity, gameObject.transform) as GameObject;
         Button newButton = buttons.transform.Find("Canvas").Find("NewBranchButton").gameObject.GetComponent<Button>();
