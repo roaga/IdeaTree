@@ -117,7 +117,7 @@ public class TreeGenerator : MonoBehaviour {
         newButton.onClick.AddListener(() => ButtonActions("newButton", branch));
         editButton.onClick.AddListener(() => ButtonActions("editButton", branch));
         deleteButton.onClick.AddListener(() => ButtonActions("deleteButton", branch));
-        newBranch.SetButtons(buttons);
+        branch.SetButtons(buttons);
     }
 
     void UpdateThicknessAndHeight() {
