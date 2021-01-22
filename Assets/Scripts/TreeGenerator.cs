@@ -77,20 +77,6 @@ public class TreeGenerator : MonoBehaviour {
         CalculateBranch(rotation, basePos, newBranch.GetLevelNum(), newBranch);
         numBranches++;
         ReloadMesh();
-
-        // instantiate branch buttons
-        Vector3 buttonPos = new Vector3(0, 0.4f * heightFactor / (newBranch.GetLevelNum() * 0.5f), 0);
-        Vector3 dir = buttonPos - newBranch.GetBase();
-        dir = Quaternion.Euler(rotation) * dir;
-        buttonPos = dir + newBranch.GetBase();
-    
-        GameObject buttons = GameObject.Instantiate(branchButtons, basePosition + buttonPos, Quaternion.identity, gameObject.transform) as GameObject;
-        Button newButton = buttons.transform.Find("Canvas").Find("NewBranchButton").gameObject.GetComponent<Button>();
-        Button editButton = buttons.transform.Find("Canvas").Find("EditBranchButton").gameObject.GetComponent<Button>();
-        Button deleteButton = buttons.transform.Find("Canvas").Find("DeleteBranchButton").gameObject.GetComponent<Button>();
-        newButton.onClick.AddListener(() => ButtonActions("newButton", newBranch));
-        editButton.onClick.AddListener(() => ButtonActions("editButton", newBranch));
-        deleteButton.onClick.AddListener(() => ButtonActions("deleteButton", newBranch));
     }
 
     void CalculateBranch(Vector3 rotation, Vector3 rootPos, int levelNum, Branch branch) {
@@ -116,6 +102,20 @@ public class TreeGenerator : MonoBehaviour {
             branchVert.Add(new Vector3(topCenter.x + thickness * (float) Math.Cos(radAngle), topCenter.y, topCenter.z + thickness * (float) Math.Sin(radAngle)));
         }
         branch.SetVertices(branchVert);
+
+        // instantiate branch buttons
+        Vector3 buttonPos = new Vector3(0, 0.4f * heightFactor / (levelNum * 0.5f), 0);
+        dir = buttonPos - rootPos;
+        dir = Quaternion.Euler(rotation) * dir;
+        buttonPos = dir + rootPos;
+    
+        GameObject buttons = GameObject.Instantiate(branchButtons, basePosition + buttonPos, Quaternion.identity, gameObject.transform) as GameObject;
+        Button newButton = buttons.transform.Find("Canvas").Find("NewBranchButton").gameObject.GetComponent<Button>();
+        Button editButton = buttons.transform.Find("Canvas").Find("EditBranchButton").gameObject.GetComponent<Button>();
+        Button deleteButton = buttons.transform.Find("Canvas").Find("DeleteBranchButton").gameObject.GetComponent<Button>();
+        newButton.onClick.AddListener(() => ButtonActions("newButton", branch));
+        editButton.onClick.AddListener(() => ButtonActions("editButton", branch));
+        deleteButton.onClick.AddListener(() => ButtonActions("deleteButton", branch));
     }
 
     void UpdateThicknessAndHeight() {
@@ -227,7 +227,7 @@ public class TreeGenerator : MonoBehaviour {
     }
 
     void OnMouseDown() {
-        Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
         if (Physics.Raycast(ray, out hit, 100f) && hit.collider.gameObject.name.Contains("TreePrefab") && !Manager.editorOpen) {
