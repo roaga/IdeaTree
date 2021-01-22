@@ -92,7 +92,7 @@ public class TreeGenerator : MonoBehaviour {
         ReloadMesh();
 
         // instantiate branch buttons
-        Vector3 buttonPos = new Vector3(0, 0.4f * heightFactor / (newBranch.GetLevelNum() * 0.5f), 0);
+        Vector3 buttonPos = new Vector3(0, 0.6f * heightFactor / (newBranch.GetLevelNum() * 0.5f), 0);
         Vector3 dir = buttonPos - basePos;
         dir = Quaternion.Euler(rotation) * dir;
         buttonPos = dir + basePos;
@@ -108,7 +108,7 @@ public class TreeGenerator : MonoBehaviour {
 
     void CalculateBranch(Vector3 rotation, Vector3 rootPos, int levelNum, Branch branch) {
         // calculate center of top face using rotation and length factor
-        Vector3 topCenter = new Vector3(0, 0.5f * heightFactor / (levelNum * 0.5f), 0);
+        Vector3 topCenter = new Vector3(0, 0.7f * heightFactor / (levelNum * 0.5f), 0);
         Vector3 dir = topCenter - rootPos;
         dir = Quaternion.Euler(rotation) * dir;
         topCenter = dir + rootPos;
