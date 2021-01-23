@@ -169,4 +169,8 @@ public class Branch {
     public GameObject GetButtons() {
         return buttons;
     }
+
+    public List<GameObject> GetLeaves() {
+        return leaves;
+    }
 }

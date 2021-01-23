@@ -144,8 +144,23 @@ public class TreeGenerator : MonoBehaviour {
                 Manager.editorOpen = false;
             } else {
                 Branch grandparent = parent.GetParent();
+                Queue<Branch> branches = new Queue<Branch>(); // level order traversal
+                branches.Enqueue(parent);
+                while (branches.Count > 0) {
+                    Branch curr = branches.Dequeue();
+                    if (curr != null) {
+                        List<Branch> children = curr.GetChildren();
+                        foreach (Branch child in children) {
+                            branches.Enqueue(child);
+                        }
+                        Destroy(curr.GetButtons());
+                        foreach (GameObject leaf in curr.GetLeaves()) {
+                            Destroy(leaf);
+                        }
+                        numBranches--;
+                    }
+                }
                 grandparent.DeleteChild(parent.id);
-                numBranches--;
                 ReloadMesh();
             }
         }
