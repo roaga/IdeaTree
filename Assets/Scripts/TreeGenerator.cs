@@ -180,8 +180,7 @@ public class TreeGenerator : MonoBehaviour {
 
     void ReloadMesh() {
         // recalculate everything based on each branch; combine each branch's vertices and triangles
-        int block = NUM_VERTICES_IN_SHAPE;
-
+        int block = 0;
         vertices.Clear();
         triangles.Clear();
 
@@ -204,13 +203,13 @@ public class TreeGenerator : MonoBehaviour {
                 List<Vector3> newVert = curr.GetVertices();
                 List<int> newTri = curr.GetTriangles();
 
-                for (int i = block; i < block + NUM_VERTICES_IN_SHAPE; i++) {
-                    vertices.Add(newVert[i - block]);
+                for (int i = 0; i < NUM_VERTICES_IN_SHAPE; i++) {
+                    vertices.Add(newVert[i]);
                 }
-                for (int i = block; i < block + NUM_VERTICES_IN_SHAPE * NUM_VERTICES_IN_SHAPE; i += 3) {
-                    triangles.Add(newTri[i - block] + block - NUM_VERTICES_IN_SHAPE);
-                    triangles.Add(newTri[i - block + 1] + block - NUM_VERTICES_IN_SHAPE);
-                    triangles.Add(newTri[i - block + 2] + block - NUM_VERTICES_IN_SHAPE);
+                for (int i = 0; i < NUM_VERTICES_IN_SHAPE * NUM_VERTICES_IN_SHAPE; i += 3) {
+                    triangles.Add(newTri[i] + block);
+                    triangles.Add(newTri[i + 1] + block);
+                    triangles.Add(newTri[i + 2] + block);
                 }
                 block += NUM_VERTICES_IN_SHAPE;
             }
