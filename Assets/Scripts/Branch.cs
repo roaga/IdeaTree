@@ -148,9 +148,9 @@ public class Branch {
 
     void GenerateLeaves() { 
         for (int j = 0; j < NUM_VERTICES_IN_SHAPE; j++) {
-            GameObject leavesHigh = GameObject.Instantiate(leafPrefab, (vertices[j] + vertices[j + NUM_VERTICES_IN_SHAPE]) / 1.1f + treeBase, UnityEngine.Random.rotation);
-            GameObject leavesMed = GameObject.Instantiate(leafPrefab, (vertices[j] + vertices[j + NUM_VERTICES_IN_SHAPE]) / 1.3f + treeBase, UnityEngine.Random.rotation);
-            GameObject leavesLow = GameObject.Instantiate(leafPrefab, (vertices[j] + vertices[j + NUM_VERTICES_IN_SHAPE]) / 1.7f + treeBase, UnityEngine.Random.rotation);
+            GameObject leavesHigh = GameObject.Instantiate(leafPrefab, top + treeBase, UnityEngine.Random.rotation);
+            GameObject leavesMed = GameObject.Instantiate(leafPrefab, top * 0.97f + treeBase, UnityEngine.Random.rotation);
+            GameObject leavesLow = GameObject.Instantiate(leafPrefab, top * 0.95f + treeBase, UnityEngine.Random.rotation);
             
             leavesHigh.SetActive(false);
             leavesMed.SetActive(false);

@@ -41,9 +41,6 @@ public class TreeGenerator : MonoBehaviour {
         for (double angle = 0.0; angle < 360.0; angle += (360.0 / NUM_VERTICES_IN_SHAPE)) {
             double radAngle = angle * Math.PI / 180;
             vertices.Add(new Vector3(thicknessFactor * (float) Math.Cos(radAngle), 0, thicknessFactor * (float) Math.Sin(radAngle)));
-            triangles.Add(0);
-            triangles.Add(0);
-            triangles.Add(0);
         }
 
         CalculateBranch(new Vector3(0, 0, 0), basePos, rootBranch.GetLevelNum(), rootBranch);
@@ -133,13 +130,11 @@ public class TreeGenerator : MonoBehaviour {
         if (button == "newButton") {
             if (parent.GetChildren().Count < 10 && numLevels < 10) {
                 NewBranch(parent);
-                Debug.Log("Creating new branch...");
             } else {
                 // TODO: show message saying can't add more branches
                 Debug.Log("Can't add more branches here");
             }
         } else if (button == "editButton") {
-            Debug.Log("Editing this branch...");
             if (!Manager.notepadOpen) {
                 Notepad.SetBranch(parent);
                 Manager.notepadOpen = true;
@@ -174,7 +169,7 @@ public class TreeGenerator : MonoBehaviour {
 
     void ReloadMesh() {
         // recalculate everything based on each branch; combine each branch's vertices and triangles
-        int block = 6;
+        int block = NUM_VERTICES_IN_SHAPE;
 
         // redo base
         int index = 0;
@@ -204,24 +199,18 @@ public class TreeGenerator : MonoBehaviour {
                         vertices[i] = newVert[i - block];
                     }
                 }
-                for (int i = block; i < block + NUM_VERTICES_IN_SHAPE * NUM_VERTICES_IN_SHAPE; i += 6) {
+                for (int i = block; i < block + NUM_VERTICES_IN_SHAPE * NUM_VERTICES_IN_SHAPE; i += 3) {
                     if (i >= triangles.Count) {
-                        triangles.Add(newTri[i - block] + block);
-                        triangles.Add(newTri[i - block + 1] + block);
-                        triangles.Add(newTri[i - block + 2] + block);
-                        triangles.Add(newTri[i - block + 3] + block);
-                        triangles.Add(newTri[i - block + 4] + block);
-                        triangles.Add(newTri[i - block + 5] + block);
+                        triangles.Add(newTri[i - block] + block - NUM_VERTICES_IN_SHAPE);
+                        triangles.Add(newTri[i - block + 1] + block - NUM_VERTICES_IN_SHAPE);
+                        triangles.Add(newTri[i - block + 2] + block - NUM_VERTICES_IN_SHAPE);
                     } else {
-                        triangles[i] = newTri[i - block] + block;
-                        triangles[i + 1] = newTri[i - block + 1] + block;
-                        triangles[i + 2] = newTri[i - block + 2] + block;
-                        triangles[i + 3] = newTri[i - block + 3] + block;
-                        triangles[i + 4] = newTri[i - block + 4] + block;
-                        triangles[i + 5] = newTri[i - block + 5] + block;
+                        triangles[i] = newTri[i - block] + block - NUM_VERTICES_IN_SHAPE;
+                        triangles[i + 1] = newTri[i - block + 1] + block - NUM_VERTICES_IN_SHAPE;
+                        triangles[i + 2] = newTri[i - block + 2] + block - NUM_VERTICES_IN_SHAPE;
                     }
                 }
-                block += NUM_VERTICES_IN_SHAPE * 2;
+                block += NUM_VERTICES_IN_SHAPE;
             }
         }
 
