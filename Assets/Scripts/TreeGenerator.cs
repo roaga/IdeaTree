@@ -59,7 +59,7 @@ public class TreeGenerator : MonoBehaviour {
         // offset rotation to avoid siblings and look natural
         List<Branch> siblings = parent.GetChildren();
         System.Random random = new System.Random();
-        float verticalOffset = random.Next(-45, -5);
+        float verticalOffset = random.Next(-5, 45);
         if (verticalOffset == 0) { verticalOffset = -5; }
         float horizontalOffset = -80 + (siblings.Count - 1) * 20f; 
         
@@ -88,10 +88,6 @@ public class TreeGenerator : MonoBehaviour {
         branch.SetRotation(rotation);
 
         List<Vector3> branchVert = new List<Vector3>();
-        // add base vertices
-        // for (int i = vertices.Count - NUM_VERTICES_IN_SHAPE; i < vertices.Count; i++) {
-        //     branchVert.Add(vertices[i]);
-        // }
         // calculate top vertices
         int thickness = (int) (thicknessFactor * numLevels * 0.5f) / levelNum;
         for (double angle = 0.0; angle < 360.0; angle += (360.0 / NUM_VERTICES_IN_SHAPE)) {
@@ -171,12 +167,13 @@ public class TreeGenerator : MonoBehaviour {
         // recalculate everything based on each branch; combine each branch's vertices and triangles
         int block = NUM_VERTICES_IN_SHAPE;
 
+        vertices.Clear();
+        triangles.Clear();
+
         // redo base
-        int index = 0;
         for (double angle = 0.0; angle < 360.0; angle += (360.0 / NUM_VERTICES_IN_SHAPE)) {
             double radAngle = angle * Math.PI / 180;
-            vertices[index] = new Vector3(thicknessFactor * (float) Math.Cos(radAngle), 0, thicknessFactor * (float) Math.Sin(radAngle));
-            index++;
+            vertices.Add(new Vector3(thicknessFactor * (float) Math.Cos(radAngle), 0, thicknessFactor * (float) Math.Sin(radAngle)));
         }
 
         Queue<Branch> branches = new Queue<Branch>(); // level order traversal
@@ -192,27 +189,19 @@ public class TreeGenerator : MonoBehaviour {
                 List<Vector3> newVert = curr.GetVertices();
                 List<int> newTri = curr.GetTriangles();
 
-                for (int i = block; i < block + NUM_VERTICES_IN_SHAPE; i++) { 
-                    if (i >= vertices.Count) {
-                        vertices.Add(newVert[i - block]);
-                    } else {
-                        vertices[i] = newVert[i - block];
-                    }
+                for (int i = block; i < block + NUM_VERTICES_IN_SHAPE; i++) {
+                    vertices.Add(newVert[i - block]);
                 }
                 for (int i = block; i < block + NUM_VERTICES_IN_SHAPE * NUM_VERTICES_IN_SHAPE; i += 3) {
-                    if (i >= triangles.Count) {
-                        triangles.Add(newTri[i - block] + block - NUM_VERTICES_IN_SHAPE);
-                        triangles.Add(newTri[i - block + 1] + block - NUM_VERTICES_IN_SHAPE);
-                        triangles.Add(newTri[i - block + 2] + block - NUM_VERTICES_IN_SHAPE);
-                    } else {
-                        triangles[i] = newTri[i - block] + block - NUM_VERTICES_IN_SHAPE;
-                        triangles[i + 1] = newTri[i - block + 1] + block - NUM_VERTICES_IN_SHAPE;
-                        triangles[i + 2] = newTri[i - block + 2] + block - NUM_VERTICES_IN_SHAPE;
-                    }
+                    triangles.Add(newTri[i - block] + block - NUM_VERTICES_IN_SHAPE);
+                    triangles.Add(newTri[i - block + 1] + block - NUM_VERTICES_IN_SHAPE);
+                    triangles.Add(newTri[i - block + 2] + block - NUM_VERTICES_IN_SHAPE);
                 }
                 block += NUM_VERTICES_IN_SHAPE;
             }
         }
+        Debug.Log("Total vertices: " + vertices.Count);
+        Debug.Log("Total triangles: " + triangles.Count);
 
         UpdateMesh();
     }
