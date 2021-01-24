@@ -180,7 +180,6 @@ public class TreeGenerator : MonoBehaviour {
 
     void ReloadMesh() {
         // recalculate everything based on each branch; combine each branch's vertices and triangles
-        int block = 0;
         vertices.Clear();
         triangles.Clear();
 
@@ -190,15 +189,30 @@ public class TreeGenerator : MonoBehaviour {
             vertices.Add(new Vector3(thicknessFactor * (float) Math.Cos(radAngle), 0, thicknessFactor * (float) Math.Sin(radAngle)));
         }
 
+        int block = 0;
+        int childBlock = NUM_VERTICES_IN_SHAPE;
+        Dictionary<int, int> vertexPositions = new Dictionary<string, int>(); // map each branch to its starting vertex
+        Dictionary<string, string> relationships = new Dictionary<string, string(); // map child, parent ids. With above dict, you can find parent's starting vertex too
         Queue<Branch> branches = new Queue<Branch>(); // level order traversal
         branches.Enqueue(rootBranch);
+        vertexPositions.Add(rootBranch.id, childBlock);
+        vertexPositions.Add("", 0);
+        relationships.Add(rootBranch.id, "");
+        childBlock += NUM_VERTICES_IN_SHAPE;
+
         while (branches.Count > 0) {
             Branch curr = branches.Dequeue();
             if (curr != null) {
                 List<Branch> children = curr.GetChildren();
+                int childNum = 1;
                 foreach (Branch child in children) {
                     branches.Enqueue(child);
+                    vertexPositions.Add(child.id, childBlock);
+                    relationships.Add(child.id, curr.id);
+                    childNum++;
+                    childBlock += NUM_VERTICES_IN_SHAPE;
                 }
+
                 CalculateBranch(curr.GetRotation(), curr.GetBase(), curr.GetLevelNum(), curr);
                 List<Vector3> newVert = curr.GetVertices();
                 List<int> newTri = curr.GetTriangles();
@@ -206,7 +220,7 @@ public class TreeGenerator : MonoBehaviour {
                 for (int i = 0; i < NUM_VERTICES_IN_SHAPE; i++) {
                     vertices.Add(newVert[i]);
                 }
-                for (int i = 0; i < NUM_VERTICES_IN_SHAPE * NUM_VERTICES_IN_SHAPE; i += 3) {
+                for (int i = 0; i < NUM_VERTICES_IN_SHAPE * NUM_VERTICES_IN_SHAPE; i += 3) { // TODO: adjust triangle blocking to seek parents.
                     triangles.Add(newTri[i] + block);
                     triangles.Add(newTri[i + 1] + block);
                     triangles.Add(newTri[i + 2] + block);
