@@ -191,8 +191,8 @@ public class TreeGenerator : MonoBehaviour {
 
         int block = 0;
         int childBlock = NUM_VERTICES_IN_SHAPE;
-        Dictionary<int, int> vertexPositions = new Dictionary<string, int>(); // map each branch to its starting vertex
-        Dictionary<string, string> relationships = new Dictionary<string, string(); // map child, parent ids. With above dict, you can find parent's starting vertex too
+        Dictionary<string, int> vertexPositions = new Dictionary<string, int>(); // map each branch to its starting vertex
+        Dictionary<string, string> relationships = new Dictionary<string, string>(); // map child, parent ids. With above dict, you can find parent's starting vertex too
         Queue<Branch> branches = new Queue<Branch>(); // level order traversal
         branches.Enqueue(rootBranch);
         vertexPositions.Add(rootBranch.id, childBlock);
