@@ -118,7 +118,7 @@ public class TreeGenerator : MonoBehaviour {
         } else {
             thicknessFactor = 0.1f;
         }
-        heightFactor = 0.5f + 0.5f * numBranches;
+        heightFactor = 0.5f + 0.1f * numBranches;
     }
 
     void ButtonActions(string button, Branch parent) {
