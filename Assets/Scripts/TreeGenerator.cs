@@ -49,12 +49,11 @@ public class TreeGenerator : MonoBehaviour {
     }
 
     void NewBranch(Branch parent) {
-        Branch newBranch = new Branch("", parent, null, parent.GetLevelNum() + 1, null, basePosition, leafPrefab, null);
-        parent.AddChild(newBranch);
-
         Vector3 basePos = parent.GetTop();
         Vector3 parentBasePos = parent.GetBase();
         Vector3 rotation = parent.GetRotation();
+        Branch newBranch = new Branch("", parent, null, parent.GetLevelNum() + 1, null, basePos, leafPrefab, null);
+        parent.AddChild(newBranch);
 
         // offset rotation to avoid siblings and look natural
         List<Branch> siblings = parent.GetChildren();
@@ -167,8 +166,6 @@ public class TreeGenerator : MonoBehaviour {
     }
 
     void UpdateMesh() {
-        UpdateThicknessAndHeight();
-
         mesh.Clear();
         mesh.vertices = vertices.ToArray();
         mesh.triangles = triangles.ToArray();
@@ -182,6 +179,7 @@ public class TreeGenerator : MonoBehaviour {
         // recalculate everything based on each branch; combine each branch's vertices and triangles
         vertices.Clear();
         triangles.Clear();
+        UpdateThicknessAndHeight();
 
         // redo base
         for (double angle = 0.0; angle < 360.0; angle += (360.0 / NUM_VERTICES_IN_SHAPE)) {
@@ -215,7 +213,7 @@ public class TreeGenerator : MonoBehaviour {
 
                 CalculateBranch(curr.GetRotation(), curr.GetBase(), curr.GetLevelNum(), curr);
                 List<Vector3> newVert = curr.GetVertices();
-                List<int> newTri = curr.GetTriangles();
+                // List<int> newTri = curr.GetTriangles();
 
                 for (int i = 0; i < NUM_VERTICES_IN_SHAPE; i++) {
                     vertices.Add(newVert[i]);
