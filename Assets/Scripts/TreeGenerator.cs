@@ -220,11 +220,31 @@ public class TreeGenerator : MonoBehaviour {
                 for (int i = 0; i < NUM_VERTICES_IN_SHAPE; i++) {
                     vertices.Add(newVert[i]);
                 }
-                for (int i = 0; i < NUM_VERTICES_IN_SHAPE * NUM_VERTICES_IN_SHAPE; i += 3) { // TODO: adjust triangle blocking to seek parents.
-                    triangles.Add(newTri[i] + block);
-                    triangles.Add(newTri[i + 1] + block);
-                    triangles.Add(newTri[i + 2] + block);
+
+                int parentStartVert = vertexPositions[relationships[curr.id]];
+                // for (int i = 0; i < NUM_VERTICES_IN_SHAPE * NUM_VERTICES_IN_SHAPE; i += 3) { // TODO: adjust triangle blocking to seek parents.
+                //     triangles.Add(newTri[i] + block);
+                //     triangles.Add(newTri[i + 1] + block);
+                //     triangles.Add(newTri[i + 2] + block);
+                // }
+                for (int vertex = 0; vertex < NUM_VERTICES_IN_SHAPE; vertex++) {
+                    triangles.Add(vertex + NUM_VERTICES_IN_SHAPE + block);
+                    if ((vertex + 1) % NUM_VERTICES_IN_SHAPE == 0) {
+                        triangles.Add(vertex + 1 - NUM_VERTICES_IN_SHAPE + parentStartVert);
+                    } else {
+                        triangles.Add(vertex + 1 + parentStartVert);
+                    }
+                    triangles.Add(vertex + parentStartVert);
+
+                    triangles.Add(vertex + NUM_VERTICES_IN_SHAPE + block);
+                    if ((vertex + 1 + NUM_VERTICES_IN_SHAPE) % NUM_VERTICES_IN_SHAPE == 0) {
+                        triangles.Add(vertex + 1 + parentStartVert);
+                    } else {
+                        triangles.Add(vertex + 1 + NUM_VERTICES_IN_SHAPE + block);
+                    }
+                    triangles.Add(vertex + parentStartVert);
                 }
+
                 block += NUM_VERTICES_IN_SHAPE;
             }
         }
